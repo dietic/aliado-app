@@ -84,7 +84,7 @@ export default function Navbar() {
         >
           <div className="flex justify-between items-center p-4 border-b">
             <span className="text-2xl font-bold bg-gradient-to-r from-primary to-[#1a1a6c] bg-clip-text text-transparent">
-              Prexi
+              Aliado
             </span>
             <button onClick={() => setMobileMenuOpen(false)}>
               <X className="h-6 w-6" />

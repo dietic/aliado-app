@@ -54,30 +54,30 @@ export default function Faq() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-lg text-slate-600 dark:text-slate-300"
           >
-            Encuentra respuestas a las preguntas más comunes sobre Prexi.
+            Encuentra respuestas a las preguntas más comunes sobre Aliado.
           </motion.p>
         </div>
 
         <div className="max-w-3xl mx-auto">
           <FaqItem
-            question="¿Qué es Prexi?"
-            answer="Prexi es una plataforma impulsada por IA que conecta a usuarios con profesionales verificados en Lima. A través de WhatsApp, puedes solicitar servicios y recibir propuestas de profesionales calificados en minutos."
+            question="¿Qué es Aliado?"
+            answer="Aliado es una plataforma impulsada por IA que conecta a usuarios con profesionales verificados en Lima. A través de WhatsApp, puedes solicitar servicios y recibir propuestas de profesionales calificados en minutos."
           />
           <FaqItem
-            question="¿Cómo funciona Prexi?"
+            question="¿Cómo funciona Aliado?"
             answer="Es simple: describes lo que necesitas, recibes propuestas de profesionales verificados y eliges al que mejor se adapte a tus necesidades. Luego, te conectas directamente con ellos a través de WhatsApp."
           />
           <FaqItem
-            question="¿Es seguro usar Prexi?"
+            question="¿Es seguro usar Aliado?"
             answer="Absolutamente. Todos los profesionales en nuestra plataforma pasan por un riguroso proceso de verificación. Además, puedes ver reseñas y calificaciones de otros usuarios antes de elegir."
           />
           <FaqItem
-            question="¿Cuánto cuesta usar Prexi?"
-            answer="El uso básico de Prexi es completamente gratuito para los usuarios. Los profesionales pagan una pequeña comisión por los servicios contratados a través de la plataforma."
+            question="¿Cuánto cuesta usar Aliado?"
+            answer="El uso básico de Aliado es completamente gratuito para los usuarios. Los profesionales pagan una pequeña comisión por los servicios contratados a través de la plataforma."
           />
           <FaqItem
-            question="¿Qué tipos de servicios puedo encontrar en Prexi?"
-            answer="Prexi ofrece una amplia gama de servicios, desde plomería, electricidad y carpintería hasta fotografía, diseño gráfico, repostería y muchos más. Si necesitas un servicio profesional, probablemente lo encontrarás en Prexi."
+            question="¿Qué tipos de servicios puedo encontrar en Aliado?"
+            answer="Aliado ofrece una amplia gama de servicios, desde plomería, electricidad y carpintería hasta fotografía, diseño gráfico, repostería y muchos más. Si necesitas un servicio profesional, probablemente lo encontrarás en Aliado."
           />
         </div>
       </div>
