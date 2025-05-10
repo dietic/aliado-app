@@ -1,7 +1,5 @@
 # Aliado 🤖 Landing Page
 
----
-
 ## TODO
 
 ### Landing page:
