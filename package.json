@@ -1,5 +1,5 @@
 {
-  "name": "aliado-landing",
+  "name": "aliado-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,6 +11,7 @@
   "dependencies": {
     "@icons-pack/react-simple-icons": "^12.7.0",
     "@radix-ui/react-slot": "^1.2.2",
+    "@supabase/supabase-js": "^2.49.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.10.1",
