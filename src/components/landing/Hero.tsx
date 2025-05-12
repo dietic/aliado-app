@@ -5,10 +5,15 @@ import { ArrowRight, CheckCircle, Clock, MessageSquare, Search, Send } from 'luc
 import Image from 'next/image'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
+import { useTheme } from 'next-themes'
+import ThemedImage from '../shared/ThemedImage'
 
 export default function Hero() {
+  const { resolvedTheme } = useTheme()
+  const whatsAppBackground =
+    resolvedTheme === 'dark' ? '/whatsapp-background-dark.png' : '/whatsapp-background.png'
   return (
-    <section className="w-full bg-gradient-to-br from-[#000041]/10 to-[#1a1a6c]/10 dark:from-[#000041]/20 dark:to-[#1a1a6c]/20 pt-[84px]">
+    <section className="w-full bg-gradient-to-br from-primary/10 to-[#1a1a6c]/10 dark:from-primary/20 dark:to-[#1a1a6c]/20 pt-[84px]">
       <div className=" max-w-[1300px] mx-auto flex pt-16 pb-24 flex-col md:flex-row ">
         <div className="flex-1 p-5">
           <motion.h6
@@ -20,13 +25,13 @@ export default function Hero() {
             La forma más inteligente de encontrar profesionales
           </motion.h6>
           <motion.h1
-            className="text-5xl font-bold leading-16 font-title"
+            className="text-5xl font-bold leading-16 font-title dark:text-slate-400"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             Conectamos con los <br />
-            <span className="text-primary text-5xl">mejores profesionales</span>
+            <span className="text-primary text-5xl dark:text-slate-50">mejores profesionales</span>
             <br /> en segundos
           </motion.h1>
           <motion.p
@@ -64,17 +69,26 @@ export default function Hero() {
           <div className="relative mx-auto w-full max-w-md">
             <div className="relative z-10 mx-auto">
               <motion.div
-                className="relative overflow-hidden rounded-[40px] border-8 border-primary bg-white shadow-xl"
+                className="relative overflow-hidden rounded-[40px] border-8 border-primary bg-white dark:border-slate-500 shadow-xl"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
               >
-                <Image
-                  src="/whatsapp-background.png"
+                {/* <Image
+                  src={whatsAppBackground}
                   alt="Aliado App Interface"
                   width={300}
                   height={300}
                   className="h-[400px] w-full object-cover"
+                /> */}
+                <ThemedImage
+                  lightSrc="/whatsapp-background.png"
+                  darkSrc="/whatsapp-background-dark.png"
+                  alt="Whatsapp background"
+                  width={300}
+                  height={600}
+                  className="h-[400px] w-full object-cover"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-primary/20 flex flex-col">
                   <div className="mt-auto p-4">
@@ -131,7 +145,7 @@ export default function Hero() {
           >
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                <CheckCircle className="h-4 w-4 text-primary" />
+                <CheckCircle className="h-4 w-4 text-primary dark:text-slate-100" />
               </div>
               <div>
                 <p className="text-xs font-medium">Profesionales verificados</p>
@@ -147,7 +161,7 @@ export default function Hero() {
           >
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center">
-                <Clock className="h-4 w-4 text-primary" />
+                <Clock className="h-4 w-4 text-primary dark:text-slate-100" />
               </div>
               <div>
                 <p className="text-xs font-medium">Respuesta rápida</p>
@@ -163,7 +177,7 @@ export default function Hero() {
           >
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <MessageSquare className="h-4 w-4 text-blue-500" />
+                <MessageSquare className="h-4 w-4 text-blue-500 dark:text-slate-100" />
               </div>
               <div>
                 <p className="text-xs font-medium">Chat directo</p>

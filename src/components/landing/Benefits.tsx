@@ -5,6 +5,8 @@ import { motion } from 'framer-motion'
 import { Shield, Clock, MessageSquare, Star, ArrowRight, Send } from 'lucide-react'
 import Image from 'next/image'
 import { Button } from '../ui/button'
+import { useTheme } from 'next-themes'
+import ThemedImage from '../shared/ThemedImage'
 
 interface FeatureItemProps {
   icon: React.ReactNode
@@ -25,6 +27,9 @@ function FeatureItem({ icon, title, description }: FeatureItemProps) {
   )
 }
 export default function Benefits() {
+  const { resolvedTheme } = useTheme()
+  const whatsAppBackground =
+    resolvedTheme === 'dark' ? '/whatsapp-background-dark.png' : '/whatsapp-background.png'
   return (
     <section className="py-20 md:py-32">
       <div className="container mx-auto px-6 md:px-8">
@@ -39,9 +44,9 @@ export default function Benefits() {
             <div className="inline-block px-4 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-primary dark:text-indigo-300 text-sm font-medium mb-4">
               Por qué elegir Aliado
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-title dark:text-slate-400">
               La plataforma más{' '}
-              <span className="bg-gradient-to-r from-primary to-[#1a1a6c] bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-primary to-[#1a1a6c] bg-clip-text text-transparent dark:text-slate-100">
                 inteligente
               </span>{' '}
               para encontrar profesionales
@@ -89,18 +94,18 @@ export default function Benefits() {
             className="order-1 lg:order-2 relative"
           >
             <div className="relative mx-auto w-full max-w-md">
-              <div className="relative z-10 bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden">
+              <div className="relative z-10 bg-white dark:bg-slate-500 rounded-2xl shadow-xl overflow-hidden">
                 <div className="p-1">
                   <div className="relative aspect-[9/16] rounded-xl overflow-hidden">
-                    <Image
-                      src="/whatsapp-background.png"
-                      alt="Aliado App Interface"
+                    <ThemedImage
+                      lightSrc="/whatsapp-background.png"
+                      darkSrc="/whatsapp-background-dark.png"
+                      alt="Whatsapp background"
                       width={300}
                       height={600}
                       className="h-full w-full object-cover"
+                      priority
                     />
-
-                    {/* App interface overlay */}
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary/10">
                       <div className="absolute top-0 left-0 right-0 bg-primary text-white p-4">
                         <div className="flex items-center justify-between">

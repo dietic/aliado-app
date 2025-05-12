@@ -40,10 +40,10 @@ export default function Faq() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold mb-6"
+            className="text-3xl md:text-4xl font-bold mb-6 dark:text-slate-400 text-title"
           >
             Preguntas{' '}
-            <span className="bg-gradient-to-r from-primary to-[#1a1a6c] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary to-[#1a1a6c] bg-clip-text text-transparent dark:text-slate-100">
               frecuentes
             </span>
           </motion.h2>

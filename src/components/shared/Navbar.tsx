@@ -5,10 +5,14 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
+import ThemeToggle from './ThemeToggle'
+import { useTheme } from 'next-themes'
+import ThemedImage from './ThemedImage'
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
@@ -33,7 +37,14 @@ export default function Navbar() {
             transition={{ duration: 0.5 }}
             className="flex items-center"
           >
-            <Image src="/logo-aliado.png" alt="Aliado logo" priority height="0" width="80" />
+            <ThemedImage
+              lightSrc="/logo-aliado.png"
+              darkSrc="/logo-aliado-blanco.png"
+              alt="Aliado logo"
+              width={80}
+              height={0}
+              priority
+            />
           </motion.div>
         </Link>
 
@@ -56,6 +67,7 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
+          <ThemeToggle />
           <Button
             variant="outline"
             className="rounded-full border-primary text-primary hover:bg-indigo-50 dark:hover:bg-indigo-900/20"

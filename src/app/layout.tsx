@@ -34,14 +34,11 @@ export default function RootLayout({
       <body className="font-primary antialiased bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 text-slate-900 dark:text-white">
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
           {children}
-          <Footer />
-          <WhatsAppFloatingButton />
         </ThemeProvider>
       </body>
     </html>

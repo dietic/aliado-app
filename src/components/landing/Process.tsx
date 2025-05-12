@@ -19,12 +19,14 @@ function StepCard({ number, title, description, icon, delay }: StepCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay, duration: 0.6 }}
-      className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+      className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 "
     >
-      <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-primary dark:text-indigo-300 mb-6">
+      <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-primary dark:bg-indigo-900/30 dark:text-indigo-300 mb-6">
         {icon}
       </div>
-      <div className="text-sm font-medium text-primary mb-2 font-title">{number}</div>
+      <div className="text-sm font-medium text-primary mb-2 font-title dark:text-slate-100">
+        {number}
+      </div>
       <h3 className="text-xl font-bold mb-3">{title}</h3>
       <p className="text-slate-600 dark:text-slate-300">{description}</p>
     </motion.div>
@@ -33,7 +35,7 @@ function StepCard({ number, title, description, icon, delay }: StepCardProps) {
 
 export default function Process() {
   return (
-    <section id="how-it-works" className="py-20 md:py-32 bg-white">
+    <section id="how-it-works" className="py-20 md:py-32 bg-white dark:bg-transparent">
       <div className="container mx-auto px-6 md:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <motion.h2
@@ -41,10 +43,10 @@ export default function Process() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold mb-6 font-title"
+            className="text-3xl md:text-4xl font-bold mb-6 font-title dark:text-slate-400"
           >
             Encuentra profesionales en{' '}
-            <span className="bg-gradient-to-r from-primary to-[#1a1a6c] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary to-[#1a1a6c] bg-clip-text text-transparent dark:text-slate-100">
               3 simples pasos
             </span>
           </motion.h2>

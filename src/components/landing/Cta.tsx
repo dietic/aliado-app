@@ -46,7 +46,7 @@ export default function Cta() {
             <Button
               size="lg"
               variant="outline"
-              className="rounded-full border-white text-primary px-8 py-6 text-lg font-medium"
+              className="rounded-full px-8 py-6 text-lg font-medium border-primary text-primary hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
             >
               Saber más
             </Button>
