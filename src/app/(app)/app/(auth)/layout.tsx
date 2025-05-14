@@ -1,3 +1,3 @@
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  return <div>authlautot {children}</div>
+  return <div className="w-full h-svh">{children}</div>
 }

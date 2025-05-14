@@ -1,3 +1,3 @@
 export default function Auth() {
-  return <div>sign up / sign in</div>
+  return <section className="w-full h-svh">sign up / sign in</section>
 }
