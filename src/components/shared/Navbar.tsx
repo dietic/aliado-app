@@ -1,12 +1,10 @@
 'use client'
-import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
-import { useTheme } from 'next-themes'
 import ThemedImage from './ThemedImage'
 
 export default function Navbar() {
@@ -72,7 +70,7 @@ export default function Navbar() {
             variant="outline"
             className="rounded-full border-primary text-primary hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
           >
-            Iniciar sesión
+            <Link href="/app/auth">Iniciar sesión</Link>
           </Button>
           <Button className="rounded-full bg-gradient-to-r from-primary to-[#1a1a6c] text-white">
             Registrarse
@@ -126,7 +124,7 @@ export default function Navbar() {
             </Link>
             <div className="flex flex-col gap-4 mt-4">
               <Button variant="outline" className="rounded-full border-primary text-primary">
-                Iniciar sesión
+                <Link href="/app/auth">Iniciar sesión</Link>
               </Button>
               <Button className="rounded-full bg-gradient-to-r from-primary to-[#1a1a6c] text-white">
                 Registrarse
