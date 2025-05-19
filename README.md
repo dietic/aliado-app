@@ -12,3 +12,11 @@
 ### Login page:
 
 ### Sign-up page:
+
+### App
+
+- [ ] Add favicon
+
+### Admin users:
+
+- [ ] A

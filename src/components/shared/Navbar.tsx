@@ -68,12 +68,12 @@ export default function Navbar() {
           <ThemeToggle />
           <Button
             variant="outline"
-            className="rounded-full border-primary text-primary hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
+            className=" border-primary text-primary hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
           >
-            <Link href="/app/auth">Iniciar sesión</Link>
+            <Link href="/app/auth?mode=login">Iniciar sesión</Link>
           </Button>
-          <Button className="rounded-full bg-gradient-to-r from-primary to-[#1a1a6c] text-white">
-            Registrarse
+          <Button className=" bg-gradient-to-r from-primary to-[#1a1a6c] text-white">
+            <Link href="/app/auth?mode=signup">Registrarse</Link>
           </Button>
         </div>
 
@@ -124,10 +124,10 @@ export default function Navbar() {
             </Link>
             <div className="flex flex-col gap-4 mt-4">
               <Button variant="outline" className="rounded-full border-primary text-primary">
-                <Link href="/app/auth">Iniciar sesión</Link>
+                <Link href="/app/auth?mode=login">Iniciar sesión</Link>
               </Button>
               <Button className="rounded-full bg-gradient-to-r from-primary to-[#1a1a6c] text-white">
-                Registrarse
+                <Link href="/app/auth?mode=signup">Registrarse</Link>
               </Button>
             </div>
           </div>

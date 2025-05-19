@@ -7,10 +7,14 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Login } from '@/components/auth/Login'
 import { Signup } from '@/components/auth/Signup'
+import { useSearchParams } from 'next/navigation'
 
 export default function Auth() {
+  const searchParams = useSearchParams()
+  const mode = searchParams.get('mode') // 'login' or 'signup'
+
   const [showPassword, setShowPassword] = useState(false)
-  const [activeTab, setActiveTab] = useState('login')
+  const [activeTab, setActiveTab] = useState(mode || 'login')
   const [registrationStep, setRegistrationStep] = useState(1) // Step 1: Phone check, Step 2: Full registration
 
   // Form values
