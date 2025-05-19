@@ -2,21 +2,21 @@
 
 ## TODO
 
-### Landing page:
+### Landing page
 
 - [ ] Send each button to the actual view
 - [ ] Navbar items should go to section
 - [ ] Add smooth scroll
 - [ ] Make whatsapp button actually go to whatsapp chat
 
-### Login page:
+### Login page
 
-### Sign-up page:
+### Sign-up page
 
 ### App
 
-- [ ] Add favicon
+- [x] Add favicon
 
-### Admin users:
+### Admin users
 
 - [ ] A
