@@ -18,5 +18,3 @@
 - [x] Add favicon
 
 ### Admin users
-
-- [ ] A
