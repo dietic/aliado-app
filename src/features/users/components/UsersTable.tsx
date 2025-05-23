@@ -22,45 +22,25 @@ import { Switch } from '@/components/ui/switch'
 import { formatDate } from '@/lib/utils'
 import { ProviderView } from '@/types/user/user.view'
 import { EditUserDialog } from './EditUserDialog'
-
-interface User {
-  id: string
-  role: Rol
-  status: 'active' | 'inactive'
-  createdAt: string
-  lastLoggedIn: string
-  profile: Profile
-  email: string
-}
-
-interface Profile {
-  id: number
-  dni: string
-  phone: string
-  rating: number
-  user_id: number
-  lastName: string
-  firstName: string
-  createdAt: string
-}
-
-interface Rol {
-  id: string
-  name: string
-  slug: string
-  description: string
-}
+import { RoleView } from '@/types/role/role.view'
 
 interface UsersTableProps {
   users: ProviderView[]
+  roles: RoleView[]
   onStatusChange: (userId: string, status: 'active' | 'inactive') => void
   onDeleteUser: (userId: string) => void
-  onUpdateUser: (user: User) => void
+  onUpdateUser: (user: ProviderView) => void
 }
 
-export function UsersTable({ users, onStatusChange, onDeleteUser, onUpdateUser }: UsersTableProps) {
-  const [editingUser, setEditingUser] = useState<User | null>(null)
-  const [userToDelete, setUserToDelete] = useState<User | null>(null)
+export function UsersTable({
+  users,
+  roles,
+  onStatusChange,
+  onDeleteUser,
+  onUpdateUser,
+}: UsersTableProps) {
+  const [editingUser, setEditingUser] = useState<ProviderView | null>(null)
+  const [userToDelete, setUserToDelete] = useState<ProviderView | null>(null)
 
   const handleStatusToggle = (userId: string, currentStatus: 'active' | 'inactive') => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
@@ -116,7 +96,7 @@ export function UsersTable({ users, onStatusChange, onDeleteUser, onUpdateUser }
                   <div className="flex items-center space-x-2">
                     <Switch
                       checked={user.status === 'active'}
-                      onCheckedChange={() => handleStatusToggle(user.id, user.status)}
+                      onCheckedChange={() => handleStatusToggle(user.id, user?.status)}
                       className="data-[state=checked]:bg-[#000041]"
                     />
                     <span
@@ -170,10 +150,11 @@ export function UsersTable({ users, onStatusChange, onDeleteUser, onUpdateUser }
         <EditUserDialog
           user={editingUser}
           open={!!editingUser}
+          roles={roles}
           onOpenChange={(open) => !open && setEditingUser(null)}
           onUpdateUser={(updatedUser) => {
             onUpdateUser(updatedUser)
-            setEditingUser(null)
+            // setEditingUser(null)
           }}
         />
       )}

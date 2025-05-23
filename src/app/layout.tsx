@@ -3,9 +3,6 @@ import { Inter, Poppins } from 'next/font/google'
 
 import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
-import Navbar from '@/components/shared/Navbar'
-import Footer from '@/components/shared/Footer'
-import WhatsAppFloatingButton from '@/components/shared/WhatsAppFloatingButton'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -22,6 +19,12 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'Aliado',
   description: 'Aliado landing page',
+  icons: {
+    icon: [
+      { url: '/favicon.png', media: '(prefers-color-scheme: dark)' },
+      { url: '/favicon-blanco.png', media: '(prefers-color-scheme: light)' },
+    ],
+  },
 }
 
 export default function RootLayout({

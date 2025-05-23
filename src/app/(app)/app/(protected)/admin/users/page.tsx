@@ -1,22 +1,25 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { UsersTable } from '@/components/shared/app/admin/users/UsersTable'
-import { UserFilters } from '@/components/shared/app/admin/users/UserFilters'
+import { UsersTable } from '@/features/users/components/UsersTable'
+import { UserFilters } from '@/features/users/components/UserFilters'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
-import { CreateUserDialog } from '@/components/shared/app/admin/users/CreateUserDialog'
-import { PageHeader } from '@/components/shared/app/PageHeader'
+import { CreateUserDialog } from '@/features/users/components/CreateUserDialog'
+import { PageHeader } from '@/components/app/PageHeader'
 import { ProviderView } from '@/types/user/user.view'
 
 export default function UsersPage() {
   const [users, setUsers] = useState<ProviderView[]>([])
+  // TODO: update correct type
+  const [roles, setRoles] = useState<any>([])
+  const [districts, setDistricts] = useState<any>([])
+  const [categories, setCategories] = useState<any>([])
   const [filteredUsers, setFilteredUsers] = useState<ProviderView[]>([])
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all')
 
-  // Filter users based on search query and status
   const filterUsers = (query: string, status: 'all' | 'active' | 'inactive') => {
     setSearchQuery(query)
     setStatusFilter(status)
@@ -49,7 +52,6 @@ export default function UsersPage() {
     try {
       const res = await fetch('/api/users')
       const data = await res.json()
-      console.log('data', data)
       setUsers(data)
       setFilteredUsers(data)
     } catch (err) {
@@ -57,23 +59,49 @@ export default function UsersPage() {
     }
   }
 
+  const fetchRoles = async () => {
+    try {
+      const res = await fetch('/api/roles')
+      const data = await res.json()
+      setRoles(data)
+    } catch (err) {
+      console.error('Error fetching roles:', err)
+    }
+  }
+
+  const fetchDistricts = async () => {
+    try {
+      const res = await fetch('/api/districts')
+      const data = await res.json()
+      setDistricts(data)
+    } catch (err) {
+      console.error('Error fetching districts:', err)
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch('/api/categories')
+      const data = await res.json()
+      setCategories(data)
+    } catch (err) {
+      console.error('Error fetching categories:', err)
+    }
+  }
+
   useEffect(() => {
     fetchUsers()
+    fetchRoles()
+    fetchDistricts()
+    fetchCategories()
   }, [])
 
-  // Create a new user
-  const handleCreateUser = (userData: any) => {
-    const newUser = {
-      id: (users.length + 1).toString(),
-      ...userData,
-      createdAt: new Date().toISOString(),
-      lastLogin: '-',
-    }
-
-    const updatedUsers = [...users, newUser]
+  const handleCreateProvider = (providerData: any) => {
+    const params = providerData
+    console.log(params)
     // setUsers(updatedUsers)
     // setFilteredUsers(updatedUsers)
-    setIsCreateDialogOpen(false)
+    // setIsCreateDialogOpen(false)
   }
 
   // Update user status
@@ -94,13 +122,17 @@ export default function UsersPage() {
   }
 
   // Update user
-  const handleUpdateUser = (updatedUser: any) => {
-    const updatedUsers = users.map((user) =>
-      user.id === updatedUser.id ? { ...user, ...updatedUser } : user
-    )
-
-    setUsers(updatedUsers)
-    filterUsers(searchQuery, statusFilter)
+  const handleUpdateUser = async (updatedUser: any) => {
+    // setUsers(updatedUsers)
+    // filterUsers(searchQuery, statusFilter)
+    try {
+      console.log(updatedUser)
+      const res = await fetch('/api/users')
+      const data = await res.json()
+      setCategories(data)
+    } catch (err) {
+      console.error('Error fetching categories:', err)
+    }
   }
 
   return (
@@ -123,6 +155,7 @@ export default function UsersPage() {
 
       <UsersTable
         users={filteredUsers}
+        roles={roles}
         onStatusChange={handleStatusChange}
         onDeleteUser={handleDeleteUser}
         onUpdateUser={handleUpdateUser}
@@ -130,8 +163,11 @@ export default function UsersPage() {
 
       <CreateUserDialog
         open={isCreateDialogOpen}
+        roles={roles}
+        districts={districts}
+        categories={categories}
         onOpenChange={setIsCreateDialogOpen}
-        onCreateUser={handleCreateUser}
+        onCreateUser={handleCreateProvider}
       />
     </div>
   )

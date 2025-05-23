@@ -19,7 +19,7 @@ interface LoginProps {
   handleLoginSubmit: (e: React.FormEvent) => void
 }
 
-export const Login: React.FC<LoginProps> = (
+export const LoginForm: React.FC<LoginProps> = (
   {
     // loginPhone,
     // loginPassword,

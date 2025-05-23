@@ -1,5 +1,5 @@
-import { Header } from '@/components/shared/app/Header'
-import { Sidebar } from '@/components/shared/app/Sidenav'
+import { Header } from '@/components/app/Header'
+import { Sidebar } from '@/components/app/Sidenav'
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -21,3 +21,26 @@ export function formatDate(dateString: string): string {
     return dateString
   }
 }
+
+export function snakeToCamel(str: string): string {
+  return str.replace(/_([a-z])/g, (_, g) => g.toUpperCase())
+}
+
+export function objSnakeToCamel<T>(obj: T): T {
+  if (Array.isArray(obj)) {
+    return obj.map((item) => objSnakeToCamel(item)) as T
+  }
+
+  if (obj !== null && typeof obj === 'object') {
+    const result: Record<string, unknown> = {}
+
+    for (const [key, value] of Object.entries(obj)) {
+      const camelKey = snakeToCamel(key)
+      result[camelKey] = objSnakeToCamel(value)
+    }
+
+    return result as T
+  }
+
+  return obj
+}

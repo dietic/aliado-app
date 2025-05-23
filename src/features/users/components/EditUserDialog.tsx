@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { ProviderView } from '@/types/user/user.view'
+import { RoleView } from '@/types/role/role.view'
 
 interface User {
   id: string
@@ -37,12 +38,19 @@ interface User {
 
 interface EditUserDialogProps {
   user: ProviderView
+  roles: RoleView[]
   open: boolean
   onOpenChange: (open: boolean) => void
-  onUpdateUser: (userData: User) => void
+  onUpdateUser: (userData: ProviderView) => void
 }
 
-export function EditUserDialog({ user, open, onOpenChange, onUpdateUser }: EditUserDialogProps) {
+export function EditUserDialog({
+  user,
+  open,
+  roles,
+  onOpenChange,
+  onUpdateUser,
+}: EditUserDialogProps) {
   const [formData, setFormData] = useState({
     id: user.id,
     name: user.profile.firstName,
@@ -56,7 +64,6 @@ export function EditUserDialog({ user, open, onOpenChange, onUpdateUser }: EditU
 
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  // Update form data when user changes
   useEffect(() => {
     setFormData({
       id: user.id,
@@ -72,8 +79,6 @@ export function EditUserDialog({ user, open, onOpenChange, onUpdateUser }: EditU
 
   const handleChange = (field: string, value: string | 'active' | 'inactive') => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-
-    // Clear error when field is edited
     if (errors[field]) {
       setErrors((prev) => {
         const newErrors = { ...prev }
@@ -166,9 +171,12 @@ export function EditUserDialog({ user, open, onOpenChange, onUpdateUser }: EditU
                   <SelectValue placeholder="Seleccionar rol" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Admin">Administrador</SelectItem>
-                  <SelectItem value="Usuario">Usuario</SelectItem>
-                  <SelectItem value="Editor">Editor</SelectItem>
+                  {roles &&
+                    roles.map((role) => (
+                      <SelectItem value={role.slug} key={role.id}>
+                        {role.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>

@@ -38,7 +38,7 @@ interface SignupProps {
   handleBackToPhoneCheck: () => void
 }
 
-export const Signup: React.FC<SignupProps> = ({
+export const SignupForm: React.FC<SignupProps> = ({
   registrationStep,
   phone,
   isPhoneValid,

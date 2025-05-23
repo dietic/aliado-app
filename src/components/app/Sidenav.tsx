@@ -5,21 +5,11 @@ import type React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import {
-  Users,
-  BarChart3,
-  Settings,
-  Bell,
-  MessageSquare,
-  LogOut,
-  Home,
-  Menu,
-  ChevronRight,
-} from 'lucide-react'
+import { Users, LogOut, Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import ThemedImage from '../ThemedImage'
+import ThemedImage from '@/components/shared/ThemedImage'
 
 interface NavItemProps {
   href: string
@@ -58,15 +48,14 @@ export function Sidebar() {
   const isActive = (path: string) => pathname === path || pathname?.startsWith(`${path}/`)
 
   const navItems = [
-    // { href: '/admin/dashboard', icon: <Home className="h-5 w-5" />, label: 'Dashboard' },
     { href: '/app/admin/users', icon: <Users className="h-5 w-5" />, label: 'Usuarios' },
+    // { href: '/admin/dashboard', icon: <Home className="h-5 w-5" />, label: 'Dashboard' },
     // { href: '/admin/analytics', icon: <BarChart3 className="h-5 w-5" />, label: 'Analíticas' },
     // { href: '/admin/messages', icon: <MessageSquare className="h-5 w-5" />, label: 'Mensajes' },
     // { href: '/admin/notifications', icon: <Bell className="h-5 w-5" />, label: 'Notificaciones' },
     // { href: '/admin/settings', icon: <Settings className="h-5 w-5" />, label: 'Configuración' },
   ]
 
-  // Handle hover events
   const handleMouseEnter = () => {
     setIsHovering(true)
     setIsCollapsed(false)
@@ -77,7 +66,6 @@ export function Sidebar() {
     setIsCollapsed(true)
   }
 
-  // Toggle sidebar collapse state
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed)
   }
@@ -102,7 +90,15 @@ export function Sidebar() {
           ) : (
             <Link href="/admin" className="flex items-center justify-center">
               <span className="text-2xl font-bold font-title text-slate-primary dark:text-slate-200">
-                A
+                <ThemedImage
+                  lightSrc="/isotipo.png"
+                  darkSrc="/isotipo-blanco.png"
+                  alt="Whatsapp background"
+                  width={20}
+                  height={0}
+                  className="w-5"
+                  priority
+                ></ThemedImage>
               </span>
             </Link>
           )}

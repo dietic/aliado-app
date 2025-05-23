@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import ThemeToggle from '../ThemeToggle'
+import ThemeToggle from '@/components/shared/ThemeToggle'
 
 export function Header() {
   return (

@@ -1,5 +1,5 @@
-import { CategoryDTO } from './category'
-import { DistrictDTO } from './district'
+import { CategoryDTO } from '../category/category.dto'
+import { DistrictDTO } from '../district/district.dto'
 
 export interface ProviderDTO {
   id: string

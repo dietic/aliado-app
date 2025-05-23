@@ -6,8 +6,7 @@ export interface ProviderView {
   role: RoleDTO
   profile: ProviderDTO
   email: string | null
-  status: string
-  createdAt: string | null
-  updatedAt: string | null
+  status: 'active' | 'inactive'
+  createdAt: string
   lastLoggedIn: string | null
 }

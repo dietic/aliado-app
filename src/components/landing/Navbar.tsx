@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
-import ThemeToggle from './ThemeToggle'
-import ThemedImage from './ThemedImage'
+import ThemeToggle from '@/components/shared/ThemeToggle'
+import ThemedImage from '@/components/shared/ThemedImage'
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)

@@ -22,21 +22,35 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { MultiSelect } from '@/components/ui/multi-select'
 
 interface CreateUserDialogProps {
   open: boolean
+  roles: any
+  districts: any
+  categories: any
   onOpenChange: (open: boolean) => void
   onCreateUser: (userData: any) => void
 }
 
-export function CreateUserDialog({ open, onOpenChange, onCreateUser }: CreateUserDialogProps) {
+export function CreateUserDialog({
+  open,
+  roles,
+  districts,
+  categories,
+  onOpenChange,
+  onCreateUser,
+}: CreateUserDialogProps) {
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
-    role: 'Usuario',
+    role: 'aliado',
     status: 'active',
     password: '',
+    districts: [],
+    services: [],
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -57,8 +71,12 @@ export function CreateUserDialog({ open, onOpenChange, onCreateUser }: CreateUse
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'El nombre es requerido'
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'El nombre es requerido'
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'El apellido es requerido'
     }
 
     if (!formData.email.trim()) {
@@ -81,21 +99,24 @@ export function CreateUserDialog({ open, onOpenChange, onCreateUser }: CreateUse
     return Object.keys(newErrors).length === 0
   }
 
+  const resetForm = () => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      role: 'aliado',
+      status: 'active',
+      password: '',
+      services: [],
+      districts: [],
+    })
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
     if (validateForm()) {
       onCreateUser(formData)
-
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        role: 'Usuario',
-        status: 'active',
-        password: '',
-      })
     }
   }
 
@@ -112,16 +133,25 @@ export function CreateUserDialog({ open, onOpenChange, onCreateUser }: CreateUse
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Nombre completo</Label>
+              <Label htmlFor="name">Nombre</Label>
               <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => handleChange('name', e.target.value)}
-                className={errors.name ? 'border-red-500' : ''}
+                id="firstName"
+                value={formData.firstName}
+                onChange={(e) => handleChange('firstName', e.target.value)}
+                className={errors.firstName ? 'border-red-500' : ''}
               />
-              {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
+              {errors.name && <p className="text-red-500 text-xs">{errors.firstName}</p>}
             </div>
-
+            <div className="grid gap-2">
+              <Label htmlFor="name">Apellidos</Label>
+              <Input
+                id="lastName"
+                value={formData.lastName}
+                onChange={(e) => handleChange('lastName', e.target.value)}
+                className={errors.lastName ? 'border-red-500' : ''}
+              />
+              {errors.name && <p className="text-red-500 text-xs">{errors.lastName}</p>}
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -156,7 +186,33 @@ export function CreateUserDialog({ open, onOpenChange, onCreateUser }: CreateUse
               />
               {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="services" className="dark:text-slate-300">
+                Servicios
+              </Label>
+              <MultiSelect
+                options={categories}
+                selected={formData.services}
+                onChange={(selected) => handleChange('services', selected)}
+                placeholder="Seleccionar servicios"
+                className="dark:bg-slate-900 dark:border-slate-700"
+              />
+            </div>
 
+            <div className="grid gap-2">
+              <Label htmlFor="districts" className="dark:text-slate-300">
+                Distritos
+              </Label>
+              {districts && (
+                <MultiSelect
+                  options={districts}
+                  selected={formData.districts}
+                  onChange={(selected) => handleChange('districts', selected)}
+                  placeholder="Seleccionar distritos"
+                  className="dark:bg-slate-900 dark:border-slate-700"
+                />
+              )}
+            </div>
             <div className="grid gap-2">
               <Label htmlFor="role">Rol</Label>
               <Select value={formData.role} onValueChange={(value) => handleChange('role', value)}>
@@ -164,9 +220,12 @@ export function CreateUserDialog({ open, onOpenChange, onCreateUser }: CreateUse
                   <SelectValue placeholder="Seleccionar rol" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Admin">Administrador</SelectItem>
-                  <SelectItem value="Usuario">Usuario</SelectItem>
-                  <SelectItem value="Editor">Editor</SelectItem>
+                  {roles &&
+                    roles.map((rol) => (
+                      <SelectItem key={rol.id} value={rol.slug}>
+                        {rol.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>

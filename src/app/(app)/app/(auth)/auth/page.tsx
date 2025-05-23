@@ -5,8 +5,8 @@ import type React from 'react'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Login } from '@/components/auth/Login'
-import { Signup } from '@/components/auth/Signup'
+import { LoginForm } from '@/features/auth/components/LoginForm'
+import { SignupForm } from '@/features/auth/components/SignupForm'
 import { useSearchParams } from 'next/navigation'
 
 export default function Auth() {
@@ -253,7 +253,7 @@ export default function Auth() {
                 </TabsList>
 
                 <TabsContent value="login">
-                  <Login
+                  <LoginForm
                     loginPhone={loginPhone}
                     loginPassword={loginPassword}
                     showPassword={showPassword}
@@ -266,7 +266,7 @@ export default function Auth() {
                 </TabsContent>
 
                 <TabsContent value="signup">
-                  <Signup
+                  <SignupForm
                     registrationStep={registrationStep}
                     phone={phone}
                     isPhoneValid={isPhoneValid}
