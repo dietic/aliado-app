@@ -8,8 +8,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Eye, EyeOff, ArrowRight, Mail, Lock, User, Check, X, ArrowLeft, Phone } from 'lucide-react'
-import Loader from '../shared/Loader'
-import GoogleIcon from '../shared/GoogleIcon'
+import Loader from '@/components/shared/Loader'
+import GoogleIcon from '@/components/shared/GoogleIcon'
 import { SiFacebook } from '@icons-pack/react-simple-icons'
 
 interface SignupProps {

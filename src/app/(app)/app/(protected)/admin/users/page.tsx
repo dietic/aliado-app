@@ -8,8 +8,12 @@ import { Plus } from 'lucide-react'
 import { CreateUserDialog } from '@/features/users/components/CreateUserDialog'
 import { PageHeader } from '@/components/app/PageHeader'
 import { ProviderView } from '@/types/user/user.view'
+import { useUsers } from '@/features/users/hooks/useGetUsers'
+import { useUpdateUser } from '@/features/users/hooks/useUpdateUser'
 
 export default function UsersPage() {
+  const { data: usersData, isLoading, error } = useUsers()
+  const { mutate: updateUser } = useUpdateUser()
   const [users, setUsers] = useState<ProviderView[]>([])
   // TODO: update correct type
   const [roles, setRoles] = useState<any>([])
@@ -90,11 +94,11 @@ export default function UsersPage() {
   }
 
   useEffect(() => {
-    fetchUsers()
+    if (usersData) setUsers(usersData)
     fetchRoles()
     fetchDistricts()
     fetchCategories()
-  }, [])
+  }, [usersData])
 
   const handleCreateProvider = (providerData: any) => {
     const params = providerData
@@ -124,15 +128,8 @@ export default function UsersPage() {
   // Update user
   const handleUpdateUser = async (updatedUser: any) => {
     // setUsers(updatedUsers)
-    // filterUsers(searchQuery, statusFilter)
-    try {
-      console.log(updatedUser)
-      const res = await fetch('/api/users')
-      const data = await res.json()
-      setCategories(data)
-    } catch (err) {
-      console.error('Error fetching categories:', err)
-    }
+    filterUsers(searchQuery, statusFilter)
+    updateUser(updatedUser)
   }
 
   return (

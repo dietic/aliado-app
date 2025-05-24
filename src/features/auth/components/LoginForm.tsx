@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ArrowRight, Eye, EyeOff, Lock, Phone } from 'lucide-react'
 import { SiFacebook } from '@icons-pack/react-simple-icons'
-import GoogleIcon from '../shared/GoogleIcon'
+import GoogleIcon from '@/components/shared/GoogleIcon'
 
 interface LoginProps {
   loginPhone: string
