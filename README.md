@@ -16,11 +16,13 @@
 ### App
 
 - [x] Add favicon
+- [ ] Add toasts
 
 ### Admin users
 
-- [ ]
+- [ ] Add toasts
 
 ### General
 
 - [ ] Style toast
+- [ ] Type application
