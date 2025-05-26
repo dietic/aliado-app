@@ -1,17 +1,16 @@
-'use client'
-import { motion } from 'framer-motion'
+import { MotionH1 } from '@/components/shared/DynamicMotion'
 
 export default function PrivacyPolicy() {
   return (
     <div className="w-full bg-gradient-to-br from-[#000041]/10 to-[#1a1a6c]/10 dark:from-[#000041]/20 dark:to-[#1a1a6c]/20 pt-[84px]">
-      <motion.h1
+      <MotionH1
         className="text-5xl font-bold leading-16 font-title text-center"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.5 }}
       >
         Política de Privacidad
-      </motion.h1>
+      </MotionH1>
       <div className="max-w-[1200px] text-left mx-auto py-12">
         <h1 className="text-3xl font-bold mb-4">Política de Privacidad</h1>
         <p className="mb-8">

@@ -1,12 +1,8 @@
-'use client'
-
 import React from 'react'
-import { motion } from 'framer-motion'
 import { Shield, Clock, MessageSquare, Star, ArrowRight, Send } from 'lucide-react'
-import Image from 'next/image'
 import { Button } from '../ui/button'
-import { useTheme } from 'next-themes'
 import ThemedImage from '../shared/ThemedImage'
+import { MotionDiv } from '../shared/DynamicMotion'
 
 interface FeatureItemProps {
   icon: React.ReactNode
@@ -27,14 +23,11 @@ function FeatureItem({ icon, title, description }: FeatureItemProps) {
   )
 }
 export default function Benefits() {
-  const { resolvedTheme } = useTheme()
-  const whatsAppBackground =
-    resolvedTheme === 'dark' ? '/whatsapp-background-dark.png' : '/whatsapp-background.png'
   return (
     <section className="py-20 md:py-32">
       <div className="container mx-auto px-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -84,9 +77,9 @@ export default function Benefits() {
                 Descubrir más <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
-          </motion.div>
+          </MotionDiv>
 
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -176,7 +169,7 @@ export default function Benefits() {
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-[#1a1a6c] rounded-full blur-3xl opacity-20"></div>
               <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-[#3a3a9c] rounded-full blur-3xl opacity-20"></div>
             </div>
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
     </section>

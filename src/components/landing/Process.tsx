@@ -1,8 +1,6 @@
-'use client'
-
-import { motion } from 'framer-motion'
 import { ArrowRight, CheckCircle, Clock, MessageSquare } from 'lucide-react'
 import { Button } from '../ui/button'
+import { MotionDiv, MotionH2, MotionP } from '../shared/DynamicMotion'
 
 interface StepCardProps {
   number: string
@@ -14,7 +12,7 @@ interface StepCardProps {
 
 function StepCard({ number, title, description, icon, delay }: StepCardProps) {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -29,7 +27,7 @@ function StepCard({ number, title, description, icon, delay }: StepCardProps) {
       </div>
       <h3 className="text-xl font-bold mb-3">{title}</h3>
       <p className="text-slate-600 dark:text-slate-300">{description}</p>
-    </motion.div>
+    </MotionDiv>
   )
 }
 
@@ -38,7 +36,7 @@ export default function Process() {
     <section id="how-it-works" className="py-20 md:py-32 bg-white dark:bg-transparent">
       <div className="container mx-auto px-6 md:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.h2
+          <MotionH2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -49,8 +47,8 @@ export default function Process() {
             <span className="bg-gradient-to-r from-primary to-[#1a1a6c] bg-clip-text text-transparent dark:text-slate-100">
               3 simples pasos
             </span>
-          </motion.h2>
-          <motion.p
+          </MotionH2>
+          <MotionP
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -59,7 +57,7 @@ export default function Process() {
           >
             Aliado utiliza inteligencia artificial para conectarte con los mejores profesionales de
             manera rápida y eficiente.
-          </motion.p>
+          </MotionP>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">

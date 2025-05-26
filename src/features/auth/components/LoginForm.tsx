@@ -1,5 +1,11 @@
-import React, { useState } from 'react'
+'use client'
+
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { useLogin } from '@/features/auth/hooks/useLogin'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -8,98 +14,85 @@ import { ArrowRight, Eye, EyeOff, Lock, Phone } from 'lucide-react'
 import { SiFacebook } from '@icons-pack/react-simple-icons'
 import GoogleIcon from '@/components/shared/GoogleIcon'
 
-interface LoginProps {
-  loginPhone: string
-  loginPassword: string
-  showPassword: boolean
-  isLoginPhoneValid: boolean
-  onPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  togglePasswordVisibility: () => void
-  handleLoginSubmit: (e: React.FormEvent) => void
+interface LoginFormProps {
+  /** If provided, will pre-fill the phone number field (e.g., after phone check exists) */
+  prefillPhone?: string
 }
 
-export const LoginForm: React.FC<LoginProps> = (
-  {
-    // loginPhone,
-    // loginPassword,
-    // showPassword,
-    // isLoginPhoneValid,
-    // onPhoneChange,
-    // onPasswordChange,
-    // togglePasswordVisibility,
-    // handleLoginSubmit,
-  }
-) => {
-  const [loginPhone, setLoginPhone] = useState('')
-  const [loginPassword, setLoginPassword] = useState('')
-  const [isLoginPhoneValid, setIsLoginPhoneValid] = useState(true)
-  const [phone, setPhone] = useState('')
+// Define schema for login form validation using Zod
+const loginSchema = z.object({
+  phone: z
+    .string()
+    .min(1, { message: 'Ingresa tu número de teléfono' })
+    .regex(/^\+?[0-9\s]{8,15}$/, {
+      message: 'Por favor ingresa un número de teléfono válido con código de país',
+    }),
+  password: z.string().min(1, { message: 'Ingresa tu contraseña' }),
+})
+type LoginFormData = z.infer<typeof loginSchema>
+
+export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
   const [showPassword, setShowPassword] = useState(false)
-  const validatePhone = (phone: string) => {
-    const phoneRegex = /^\+?[0-9\s]{8,15}$/
-    return phoneRegex.test(phone)
-  }
-  const isPhoneOk = phone && validatePhone(phone)
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword)
-  }
-  const handleLoginPhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setLoginPhone(value)
-    if (value) {
-      setIsLoginPhoneValid(validatePhone(value))
-    } else {
-      setIsLoginPhoneValid(true) // Don't show error for empty field
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev)
+
+  // Initialize form with react-hook-form and Zod schema
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { phone: '', password: '' },
+  })
+
+  // Watch form values for conditional UI (disable button, error messages)
+  const phoneValue = watch('phone')
+  const passwordValue = watch('password')
+
+  // If a phone number is provided to pre-fill (e.g., from signup phone check), set it
+  useEffect(() => {
+    if (prefillPhone) {
+      setValue('phone', prefillPhone)
     }
+  }, [prefillPhone, setValue])
+
+  const { login, isLoading } = useLogin()
+
+  // Handle form submission
+  const onSubmit = (data: LoginFormData) => {
+    login(data.phone, data.password)
+    // Note: login business logic (API call or authentication) is handled in useLogin hook
   }
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
 
-    // Validate phone
-    const isPhoneOk = loginPhone && validatePhone(loginPhone)
-    setIsLoginPhoneValid(isPhoneOk)
-
-    // If validation passes
-    if (isPhoneOk && loginPassword) {
-      // Form is valid, proceed with submission
-      // console.log('Login attempted', { phone: loginPhone, password: loginPassword })
-      // Here you would typically call an API to authenticate the user
-
-      // For demo purposes, show success if the demo credentials are used
-      if (loginPhone === '+51 999 999 999' && loginPassword === 'password123!') {
-        alert('Inicio de sesión exitoso!')
-      } else {
-        alert('Credenciales incorrectas. Intenta nuevamente.')
-      }
-    }
-  }
   return (
-    <form onSubmit={handleLoginSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="space-y-4">
+        {/* Phone Number Input */}
         <div className="space-y-2">
           <Label htmlFor="login-phone">Número de teléfono</Label>
           <div className="relative">
             <Phone
-              className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 ${loginPhone && !isLoginPhoneValid ? '-translate-y-[18px]' : ''}`}
+              className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 ${phoneValue && errors.phone ? '-translate-y-[18px]' : ''}`}
             />
             <Input
               id="login-phone"
               type="tel"
               placeholder="+51 999 999 999"
-              className={`pl-10 ${!isLoginPhoneValid ? 'border-red-500 focus:ring-red-500' : ''}`}
+              className={`pl-10 ${errors.phone && phoneValue ? 'border-red-500 focus:ring-red-500' : ''}`}
+              // Bind input to react-hook-form
+              {...register('phone')}
               required
-              value={loginPhone}
-              onChange={handleLoginPhoneChange}
             />
-            {loginPhone && !isLoginPhoneValid && (
-              <div className="text-red-500 text-xs mt-1">
-                Por favor ingresa un número de teléfono válido con código de país
-              </div>
+            {/* Validation error message for phone (shown if invalid and not empty) */}
+            {phoneValue && errors.phone && (
+              <div className="text-red-500 text-xs mt-1">{errors.phone.message}</div>
             )}
           </div>
         </div>
 
+        {/* Password Input */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <Label htmlFor="login-password">Contraseña</Label>
@@ -117,9 +110,8 @@ export const LoginForm: React.FC<LoginProps> = (
               type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
               className="pl-10 pr-10"
+              {...register('password')}
               required
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
             />
             <button
               type="button"
@@ -132,6 +124,7 @@ export const LoginForm: React.FC<LoginProps> = (
         </div>
       </div>
 
+      {/* Remember Me Checkbox */}
       <div className="flex items-center space-x-2">
         <Checkbox id="remember" />
         <Label htmlFor="remember" className="text-sm text-slate-500">
@@ -139,13 +132,16 @@ export const LoginForm: React.FC<LoginProps> = (
         </Label>
       </div>
 
+      {/* Submit Button */}
       <Button
         type="submit"
         className="w-full bg-gradient-to-r from-primary to-[#1a1a6c] hover:from-primary hover:to-[#3a3a9c] text-white"
-        disabled={!loginPhone || !loginPassword || !isLoginPhoneValid}
+        disabled={!phoneValue || !passwordValue || !!errors.phone}
       >
         Iniciar sesión <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
+
+      {/* Divider and Social Login Buttons */}
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-slate-300"></div>
@@ -156,7 +152,6 @@ export const LoginForm: React.FC<LoginProps> = (
           </span>
         </div>
       </div>
-
       <div className="grid grid-cols-2 gap-4">
         <Button
           variant="outline"

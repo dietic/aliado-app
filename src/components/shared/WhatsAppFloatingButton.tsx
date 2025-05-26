@@ -1,11 +1,10 @@
-'use client'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { SiWhatsapp } from '@icons-pack/react-simple-icons'
+import { MotionDiv } from './DynamicMotion'
 
 export default function WhatsAppFloatingButton() {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 1.5, duration: 0.5 }}
@@ -19,6 +18,6 @@ export default function WhatsAppFloatingButton() {
       >
         <SiWhatsapp className="w-8 h-8 text-white" size={8} />
       </Link>
-    </motion.div>
+    </MotionDiv>
   )
 }

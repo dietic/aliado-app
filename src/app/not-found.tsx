@@ -1,9 +1,7 @@
-'use client'
-
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Search } from 'lucide-react'
+import { MotionDiv, MotionH1, MotionP } from '@/components/shared/DynamicMotion'
 
 export default function NotFound() {
   return (
@@ -20,7 +18,7 @@ export default function NotFound() {
 
       <main className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-3xl">
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -31,7 +29,7 @@ export default function NotFound() {
             <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-[#3a3a9c] rounded-full blur-3xl opacity-5"></div>
 
             <div className="relative z-10">
-              <motion.div
+              <MotionDiv
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
@@ -40,18 +38,18 @@ export default function NotFound() {
                 <div className="w-32 h-32 md:w-40 md:h-40 bg-slate-100 rounded-full flex items-center justify-center mx-auto dark:bg-slate-400">
                   <Search className="w-16 h-16 md:w-20 md:h-20 text-[#000041] dark:text-slate-200" />
                 </div>
-              </motion.div>
+              </MotionDiv>
 
-              <motion.h1
+              <MotionH1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.6 }}
                 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900 dark:text-slate-200"
               >
                 Página no encontrada
-              </motion.h1>
+              </MotionH1>
 
-              <motion.p
+              <MotionP
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
@@ -59,9 +57,9 @@ export default function NotFound() {
               >
                 Lo sentimos, la página que estás buscando no existe o ha sido movida a otra
                 ubicación.
-              </motion.p>
+              </MotionP>
 
-              <motion.div
+              <MotionDiv
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
@@ -84,9 +82,9 @@ export default function NotFound() {
                 >
                   <Link href="/contact">Contactar soporte</Link>
                 </Button>
-              </motion.div>
+              </MotionDiv>
 
-              <motion.div
+              <MotionDiv
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7, duration: 0.8 }}
@@ -101,9 +99,9 @@ export default function NotFound() {
                     soporte@aliado.com
                   </a>
                 </p>
-              </motion.div>
+              </MotionDiv>
             </div>
-          </motion.div>
+          </MotionDiv>
 
           <div className="mt-8 text-center text-xs text-slate-500">
             <p>© {new Date().getFullYear()} Aliado. Todos los derechos reservados.</p>

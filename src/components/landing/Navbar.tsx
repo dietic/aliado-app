@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { MotionDiv } from '../shared/DynamicMotion'
 import { useEffect, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import ThemeToggle from '@/components/shared/ThemeToggle'
@@ -29,7 +29,7 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-6 md:px-8 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center">
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
@@ -43,7 +43,7 @@ export default function Navbar() {
               height={0}
               priority
             />
-          </motion.div>
+          </MotionDiv>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -85,7 +85,7 @@ export default function Navbar() {
         </button>
       </div>
       {mobileMenuOpen && (
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, x: '100%' }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: '100%' }}
@@ -131,7 +131,7 @@ export default function Navbar() {
               </Button>
             </div>
           </div>
-        </motion.div>
+        </MotionDiv>
       )}
     </header>
   )

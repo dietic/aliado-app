@@ -1,30 +1,23 @@
-'use client'
-
-import { motion } from 'framer-motion'
 import { ArrowRight, CheckCircle, Clock, MessageSquare, Search, Send } from 'lucide-react'
-import Image from 'next/image'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
-import { useTheme } from 'next-themes'
-import ThemedImage from '../shared/ThemedImage'
+import { Button } from '../../ui/button'
+import { Input } from '../../ui/input'
+import ThemedImage from '../../shared/ThemedImage'
+import { MotionDiv, MotionH1, MotionH6, MotionP } from '@/components/shared/DynamicMotion'
 
 export default function Hero() {
-  const { resolvedTheme } = useTheme()
-  const whatsAppBackground =
-    resolvedTheme === 'dark' ? '/whatsapp-background-dark.png' : '/whatsapp-background.png'
   return (
     <section className="w-full bg-gradient-to-br from-primary/10 to-[#1a1a6c]/10 dark:from-primary/20 dark:to-[#1a1a6c]/20 pt-[84px]">
       <div className=" max-w-[1300px] mx-auto flex pt-16 pb-24 flex-col md:flex-row ">
         <div className="flex-1 p-5">
-          <motion.h6
+          <MotionH6
             className="px-6 py-1 bg-indigo-100 rounded-full font-semibold text-sm text-primary shadow-xs inline-block mb-6"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
             La forma más inteligente de encontrar profesionales
-          </motion.h6>
-          <motion.h1
+          </MotionH6>
+          <MotionH1
             className="text-5xl font-bold leading-16 font-title dark:text-slate-400"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -33,8 +26,8 @@ export default function Hero() {
             Conectamos con los <br />
             <span className="text-primary text-5xl dark:text-slate-50">mejores profesionales</span>
             <br /> en segundos
-          </motion.h1>
-          <motion.p
+          </MotionH1>
+          <MotionP
             className="mt-6 text-lg text-slate-600 dark:text-slate-300"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -42,8 +35,8 @@ export default function Hero() {
           >
             Aliado utiliza IA para conectarte con los profesionales más calificados en Lima. Desde
             plomeros hasta fotógrafos, encuentra el servicio que necesitas en minutos, no en días.
-          </motion.p>
-          <motion.div
+          </MotionP>
+          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
@@ -63,12 +56,12 @@ export default function Hero() {
             >
               Buscar ahora <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-          </motion.div>
+          </MotionDiv>
         </div>
         <div className="flex-1 relative">
           <div className="relative mx-auto w-full max-w-md">
             <div className="relative z-10 mx-auto">
-              <motion.div
+              <MotionDiv
                 className="relative overflow-hidden rounded-[40px] border-8 border-primary bg-white dark:border-slate-500 shadow-xl"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -132,12 +125,12 @@ export default function Hero() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </MotionDiv>
             </div>
             <div className="absolute -top-6 -left-6 w-24 h-24 bg-[#1a1a6c] rounded-full blur-3xl opacity-20"></div>
             <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-[#3a3a9c] rounded-full blur-3xl opacity-20"></div>
           </div>
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: -60 }}
             transition={{ delay: 0.8, duration: 0.5 }}
@@ -152,8 +145,8 @@ export default function Hero() {
                 <p className="text-xs text-slate-500 dark:text-slate-400">100% confiable</p>
               </div>
             </div>
-          </motion.div>
-          <motion.div
+          </MotionDiv>
+          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.5 }}
@@ -168,8 +161,8 @@ export default function Hero() {
                 <p className="text-xs text-slate-500 dark:text-slate-400">En minutos</p>
               </div>
             </div>
-          </motion.div>
-          <motion.div
+          </MotionDiv>
+          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 0.5 }}
@@ -184,7 +177,7 @@ export default function Hero() {
                 <p className="text-xs text-slate-500 dark:text-slate-400">Vía WhatsApp</p>
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
     </section>
