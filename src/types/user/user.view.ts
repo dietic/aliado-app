@@ -1,12 +1,12 @@
 import { ProviderDTO } from '../provider/provider.dto'
 import { RoleDTO } from '../role/role.dto'
 
-export interface ProviderView {
+export interface UserView {
   id: string
   role: RoleDTO
-  profile: ProviderDTO
-  email: string | null
+  provider: ProviderDTO
+  email: string
   status: 'active' | 'inactive'
   createdAt: string
-  lastLoggedIn: string | null
+  lastLoggedIn: string
 }

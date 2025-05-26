@@ -17,7 +17,8 @@ interface SignupProps {
   phone: string
   isPhoneValid: boolean
   isCheckingPhone: boolean
-  name: string
+  firstName: string
+  lastName: string
   email: string
   password: string
   isEmailValid: boolean
@@ -34,7 +35,8 @@ interface SignupProps {
   handleEmailChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   handlePasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   togglePasswordVisibility: () => void
-  setName: React.Dispatch<React.SetStateAction<string>>
+  setFirstName: React.Dispatch<React.SetStateAction<string>>
+  setLastName: React.Dispatch<React.SetStateAction<string>>
   handleBackToPhoneCheck: () => void
 }
 
@@ -43,7 +45,8 @@ export const SignupForm: React.FC<SignupProps> = ({
   phone,
   isPhoneValid,
   isCheckingPhone,
-  name,
+  firstName,
+  lastName,
   email,
   password,
   isEmailValid,
@@ -55,7 +58,8 @@ export const SignupForm: React.FC<SignupProps> = ({
   handleEmailChange,
   handlePasswordChange,
   togglePasswordVisibility,
-  setName,
+  setFirstName,
+  setLastName,
   handleBackToPhoneCheck,
 }) => {
   return (
@@ -135,21 +139,35 @@ export const SignupForm: React.FC<SignupProps> = ({
             <form onSubmit={handleSignupSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Nombre completo</Label>
+                  <Label htmlFor="name">Nombre(s)</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
                     <Input
-                      id="name"
+                      id="firstName"
                       type="text"
                       placeholder="Tu nombre"
                       className="pl-10"
                       required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
                     />
                   </div>
                 </div>
-
+                <div className="space-y-2">
+                  <Label htmlFor="name">Apellidos</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Tu nombre"
+                      className="pl-10"
+                      required
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Correo electrónico</Label>
                   <div className="relative">
@@ -281,8 +299,14 @@ export const SignupForm: React.FC<SignupProps> = ({
                 type="submit"
                 className="w-full bg-gradient-to-r from-primary to-[#1a1a6c] hover:from-primary hover:to-[#3a3a9c] text-white"
                 disabled={
-                  !passwordValidation.isValid || !isEmailValid || !name || !email || !password
+                  !passwordValidation.isValid ||
+                  !isEmailValid ||
+                  !firstName ||
+                  !lastName ||
+                  !email ||
+                  !password
                 }
+                onClick={handleSignupSubmit}
               >
                 Crear cuenta <ArrowRight className="ml-2 h-4 w-4" />
               </Button>

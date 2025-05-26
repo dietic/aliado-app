@@ -20,31 +20,41 @@ import { Badge } from '@/components/ui/badge'
 import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import { formatDate } from '@/lib/utils'
-import { ProviderView } from '@/types/user/user.view'
 import { EditUserDialog } from './EditUserDialog'
 import { RoleView } from '@/types/role/role.view'
+import { UserView } from '@/types/user/user.view'
+import { updateUserStatus } from '../api/updateUserStatus'
 
 interface UsersTableProps {
-  users: ProviderView[]
+  users: UserView[]
   roles: RoleView[]
+  districts: any[]
+  categories: any[]
   onStatusChange: (userId: string, status: 'active' | 'inactive') => void
   onDeleteUser: (userId: string) => void
-  onUpdateUser: (user: ProviderView) => void
+  // onUpdateUser: (user: UserView) => void
 }
 
 export function UsersTable({
   users,
   roles,
+  districts,
+  categories,
   onStatusChange,
   onDeleteUser,
-  onUpdateUser,
+  // onUpdateUser,
 }: UsersTableProps) {
-  const [editingUser, setEditingUser] = useState<ProviderView | null>(null)
-  const [userToDelete, setUserToDelete] = useState<ProviderView | null>(null)
+  const [editingUser, setEditingUser] = useState<UserView | null>(null)
+  const [userToDelete, setUserToDelete] = useState<UserView | null>(null)
 
   const handleStatusToggle = (userId: string, currentStatus: 'active' | 'inactive') => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
     onStatusChange(userId, newStatus)
+    const params = {
+      id: userId,
+      status: newStatus,
+    }
+    updateUserStatus(params)
   }
 
   return (
@@ -76,20 +86,22 @@ export function UsersTable({
             users.map((user) => (
               <TableRow key={user.id} className="dark:border-slate-700">
                 <TableCell className="font-medium dark:text-white">
-                  {user?.profile?.firstName || '--'}
+                  {`${user?.provider?.firstName ?? '-'} ${user?.provider?.lastName ?? '-'}` || '--'}
                 </TableCell>
                 <TableCell className="dark:text-slate-300">{user?.email}</TableCell>
-                <TableCell className="dark:text-slate-300">{user?.profile?.phone}</TableCell>
+                <TableCell className="dark:text-slate-300">
+                  {user?.provider?.phone ?? '-'}
+                </TableCell>
                 <TableCell>
                   <Badge
                     variant="outline"
                     className={
-                      user.role.slug === 'admin'
+                      user?.role?.slug === 'admin'
                         ? 'border-indigo-400 text-indigo-400'
                         : 'border-slate-200 text-slate-700 dark:border-slate-600 dark:text-slate-300'
                     }
                   >
-                    {user.role.name} {user.role.slug === 'admin' ? '👾' : '👷🏻'}
+                    {user.role?.name} {user.role?.slug === 'admin' ? '👾' : '👷🏻'}
                   </Badge>
                 </TableCell>
                 <TableCell>
@@ -151,11 +163,13 @@ export function UsersTable({
           user={editingUser}
           open={!!editingUser}
           roles={roles}
+          districts={districts}
+          categories={categories}
           onOpenChange={(open) => !open && setEditingUser(null)}
-          onUpdateUser={(updatedUser) => {
-            onUpdateUser(updatedUser)
-            // setEditingUser(null)
-          }}
+          // onUpdateUser={(updatedUser) => {
+          //   onUpdateUser(updatedUser)
+          //   // setEditingUser(null)
+          // }}
         />
       )}
 

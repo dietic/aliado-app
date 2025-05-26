@@ -8,17 +8,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LoginForm } from '@/features/auth/components/LoginForm'
 import { SignupForm } from '@/features/auth/components/SignupForm'
 import { useSearchParams } from 'next/navigation'
+import { useSignUp } from '@/features/auth/hooks/useSignUp'
 
 export default function Auth() {
   const searchParams = useSearchParams()
   const mode = searchParams.get('mode') // 'login' or 'signup'
+
+  const { mutate, error } = useSignUp()
 
   const [showPassword, setShowPassword] = useState(false)
   const [activeTab, setActiveTab] = useState(mode || 'login')
   const [registrationStep, setRegistrationStep] = useState(1) // Step 1: Phone check, Step 2: Full registration
 
   // Form values
-  const [name, setName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [loginPhone, setLoginPhone] = useState('')
@@ -157,13 +161,13 @@ export default function Auth() {
     // If all validations pass
     if (isEmailOk && isPhoneOk && isPasswordOk) {
       // Form is valid, proceed with submission
-      console.log('Form submitted successfully', { name, email, phone, password })
+      // console.log('Form submitted successfully', { name, email, phone, password })
       // Here you would typically call an API to register the user
-
       // For demo purposes, show success
-      alert('Cuenta creada exitosamente!')
+      // alert('Cuenta creada exitosamente!')
+      mutate({ email, password, firstName, lastName, phone })
     } else {
-      console.log('Form has validation errors')
+      // console.log('Form has validation errors')
     }
   }
 
@@ -178,7 +182,7 @@ export default function Auth() {
     // If validation passes
     if (isPhoneOk && loginPassword) {
       // Form is valid, proceed with submission
-      console.log('Login attempted', { phone: loginPhone, password: loginPassword })
+      // console.log('Login attempted', { phone: loginPhone, password: loginPassword })
       // Here you would typically call an API to authenticate the user
 
       // For demo purposes, show success if the demo credentials are used
@@ -197,7 +201,8 @@ export default function Auth() {
   // Reset registration form when going back to step 1
   const handleBackToPhoneCheck = () => {
     setRegistrationStep(1)
-    setName('')
+    setFirstName('')
+    setLastName('')
     setEmail('')
     setPassword('')
     setPasswordValidation({
@@ -271,7 +276,8 @@ export default function Auth() {
                     phone={phone}
                     isPhoneValid={isPhoneValid}
                     isCheckingPhone={isCheckingPhone}
-                    name={name}
+                    firstName={firstName}
+                    lastName={lastName}
                     email={email}
                     password={password}
                     isEmailValid={isEmailValid}
@@ -283,7 +289,8 @@ export default function Auth() {
                     handleEmailChange={handleEmailChange}
                     handlePasswordChange={handlePasswordChange}
                     togglePasswordVisibility={togglePasswordVisibility}
-                    setName={setName}
+                    setFirstName={setFirstName}
+                    setLastName={setLastName}
                     handleBackToPhoneCheck={handleBackToPhoneCheck}
                   />
                 </TabsContent>

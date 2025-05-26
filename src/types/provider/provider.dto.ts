@@ -1,5 +1,4 @@
 import { CategoryDTO } from '../category/category.dto'
-import { DistrictDTO } from '../district/district.dto'
 
 export interface ProviderDTO {
   id: string
@@ -9,7 +8,6 @@ export interface ProviderDTO {
   lastName: string
   phone: string
   rating: number
-  createdAt: string
   categories?: CategoryDTO[]
-  districts?: DistrictDTO[]
+  districts?: any[]
 }

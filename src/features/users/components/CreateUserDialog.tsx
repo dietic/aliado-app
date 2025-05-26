@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { MultiSelect } from '@/components/ui/multi-select'
+import { useCreateUser } from '../hooks/useCreateUser'
 
 interface CreateUserDialogProps {
   open: boolean
@@ -42,16 +43,11 @@ export function CreateUserDialog({
   onCreateUser,
 }: CreateUserDialogProps) {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
     email: '',
-    phone: '',
-    role: 'aliado',
-    status: 'active',
-    password: '',
-    districts: [],
-    services: [],
+    role: '',
+    status: '',
   })
+  const { mutate: createUser, isPending, error } = useCreateUser()
 
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -71,13 +67,13 @@ export function CreateUserDialog({
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'El nombre es requerido'
-    }
+    // if (!formData.firstName.trim()) {
+    //   newErrors.firstName = 'El nombre es requerido'
+    // }
 
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'El apellido es requerido'
-    }
+    // if (!formData.lastName.trim()) {
+    //   newErrors.lastName = 'El apellido es requerido'
+    // }
 
     if (!formData.email.trim()) {
       newErrors.email = 'El email es requerido'
@@ -85,15 +81,15 @@ export function CreateUserDialog({
       newErrors.email = 'Email inválido'
     }
 
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'El teléfono es requerido'
-    }
+    // if (!formData.phone.trim()) {
+    //   newErrors.phone = 'El teléfono es requerido'
+    // }
 
-    if (!formData.password.trim()) {
-      newErrors.password = 'La contraseña es requerida'
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'La contraseña debe tener al menos 8 caracteres'
-    }
+    // if (!formData.password.trim()) {
+    //   newErrors.password = 'La contraseña es requerida'
+    // } else if (formData.password.length < 8) {
+    //   newErrors.password = 'La contraseña debe tener al menos 8 caracteres'
+    // }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -101,22 +97,17 @@ export function CreateUserDialog({
 
   const resetForm = () => {
     setFormData({
-      firstName: '',
-      lastName: '',
       email: '',
-      phone: '',
-      role: 'aliado',
-      status: 'active',
-      password: '',
-      services: [],
-      districts: [],
+      role: '',
+      status: '',
     })
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (validateForm()) {
-      onCreateUser(formData)
+      // onCreateUser(formData)
+      createUser(formData)
     }
   }
 
@@ -132,7 +123,7 @@ export function CreateUserDialog({
 
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="name">Nombre</Label>
               <Input
                 id="firstName"
@@ -151,7 +142,7 @@ export function CreateUserDialog({
                 className={errors.lastName ? 'border-red-500' : ''}
               />
               {errors.name && <p className="text-red-500 text-xs">{errors.lastName}</p>}
-            </div>
+            </div> */}
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -164,7 +155,7 @@ export function CreateUserDialog({
               {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
             </div>
 
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="phone">Teléfono</Label>
               <Input
                 id="phone"
@@ -173,9 +164,9 @@ export function CreateUserDialog({
                 className={errors.phone ? 'border-red-500' : ''}
               />
               {errors.phone && <p className="text-red-500 text-xs">{errors.phone}</p>}
-            </div>
+            </div> */}
 
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="password">Contraseña</Label>
               <Input
                 id="password"
@@ -185,21 +176,21 @@ export function CreateUserDialog({
                 className={errors.password ? 'border-red-500' : ''}
               />
               {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="services" className="dark:text-slate-300">
+            </div> */}
+            {/* <div className="grid gap-2">
+              <Label htmlFor="categories" className="dark:text-slate-300">
                 Servicios
               </Label>
               <MultiSelect
                 options={categories}
-                selected={formData.services}
-                onChange={(selected) => handleChange('services', selected)}
+                selected={formData.categories}
+                onChange={(selected) => handleChange('categories', selected)}
                 placeholder="Seleccionar servicios"
                 className="dark:bg-slate-900 dark:border-slate-700"
               />
-            </div>
+            </div> */}
 
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="districts" className="dark:text-slate-300">
                 Distritos
               </Label>
@@ -212,7 +203,7 @@ export function CreateUserDialog({
                   className="dark:bg-slate-900 dark:border-slate-700"
                 />
               )}
-            </div>
+            </div> */}
             <div className="grid gap-2">
               <Label htmlFor="role">Rol</Label>
               <Select value={formData.role} onValueChange={(value) => handleChange('role', value)}>
@@ -255,6 +246,7 @@ export function CreateUserDialog({
             <Button
               type="submit"
               className="bg-gradient-to-r from-[#000041] to-[#1a1a6c] hover:from-[#000041] hover:to-[#3a3a9c] text-white"
+              onClick={() => handleCreateUser()}
             >
               Crear Usuario
             </Button>

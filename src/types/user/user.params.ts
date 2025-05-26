@@ -1,4 +1,4 @@
-export interface UpdateProviderParams {
+export interface UpdateUserParams {
   id: string
   firstName?: string
   lastName?: string
@@ -6,4 +6,9 @@ export interface UpdateProviderParams {
   phone?: string
   roleId?: number
   isActive?: boolean
+}
+
+export interface UpdateUserStatusParams {
+  id: string
+  status: string
 }

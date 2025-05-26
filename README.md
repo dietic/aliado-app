@@ -18,3 +18,9 @@
 - [x] Add favicon
 
 ### Admin users
+
+- [ ]
+
+### General
+
+- [ ] Style toast

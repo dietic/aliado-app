@@ -1,11 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { getDistricts } from '@/features/districts/api/getDistricts'
+import { supabase } from '@/lib/supabaseAdmin'
+import { NextResponse } from 'next/server'
 
 export async function GET() {
-  try {
-    const districts = await getDistricts()
-    return NextResponse.json(districts)
-  } catch (err) {
-    return NextResponse.json({ error: (err as Error).message }, { status: 500 })
-  }
+  const { data, error } = await supabase.from('districts').select('*')
+  if (error) throw new Error(error.message)
+  return NextResponse.json(data)
 }

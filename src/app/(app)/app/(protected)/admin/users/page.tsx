@@ -7,19 +7,23 @@ import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { CreateUserDialog } from '@/features/users/components/CreateUserDialog'
 import { PageHeader } from '@/components/app/PageHeader'
-import { ProviderView } from '@/types/user/user.view'
-import { useUsers } from '@/features/users/hooks/useGetUsers'
+import { useGetUsers } from '@/features/users/hooks/useGetUsers'
 import { useUpdateUser } from '@/features/users/hooks/useUpdateUser'
+import { UserView } from '@/types/user/user.view'
+import { useGetCategories } from '@/features/categories/hooks/useCategories'
+import { useGetDistricts } from '@/features/districts/hooks/useGetDistricts'
 
 export default function UsersPage() {
-  const { data: usersData, isLoading, error } = useUsers()
-  const { mutate: updateUser } = useUpdateUser()
-  const [users, setUsers] = useState<ProviderView[]>([])
+  const { data: usersData, isLoading: usersLoading, error: usersError } = useGetUsers()
+  const { data: categoriesData } = useGetCategories()
+  const { data: districtsData } = useGetDistricts()
+
+  const [users, setUsers] = useState<UserView[]>([])
   // TODO: update correct type
   const [roles, setRoles] = useState<any>([])
   const [districts, setDistricts] = useState<any>([])
   const [categories, setCategories] = useState<any>([])
-  const [filteredUsers, setFilteredUsers] = useState<ProviderView[]>([])
+  const [filteredUsers, setFilteredUsers] = useState<UserView[]>([])
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all')
@@ -34,12 +38,12 @@ export default function UsersPage() {
       const lowercaseQuery = query.toLowerCase()
       filtered = filtered.filter(
         (user) =>
-          user.profile.firstName
-            .concat(' ', user.profile.lastName)
+          user.provider.firstName
+            .concat(' ', user.provider.lastName)
             .toLowerCase()
             .includes(lowercaseQuery) ||
           user?.email?.toLowerCase().includes(lowercaseQuery) ||
-          user?.profile?.phone?.toLowerCase().includes(lowercaseQuery)
+          user?.provider?.phone?.includes(lowercaseQuery)
       )
     }
 
@@ -52,17 +56,6 @@ export default function UsersPage() {
     setFilteredUsers(filtered)
   }
 
-  const fetchUsers = async () => {
-    try {
-      const res = await fetch('/api/users')
-      const data = await res.json()
-      setUsers(data)
-      setFilteredUsers(data)
-    } catch (err) {
-      console.error('Error fetching users:', err)
-    }
-  }
-
   const fetchRoles = async () => {
     try {
       const res = await fetch('/api/roles')
@@ -73,36 +66,31 @@ export default function UsersPage() {
     }
   }
 
-  const fetchDistricts = async () => {
-    try {
-      const res = await fetch('/api/districts')
-      const data = await res.json()
-      setDistricts(data)
-    } catch (err) {
-      console.error('Error fetching districts:', err)
-    }
-  }
-
-  const fetchCategories = async () => {
-    try {
-      const res = await fetch('/api/categories')
-      const data = await res.json()
-      setCategories(data)
-    } catch (err) {
-      console.error('Error fetching categories:', err)
-    }
-  }
+  // const fetchDistricts = async () => {
+  //   try {
+  //     const res = await fetch('/api/districts')
+  //     const data = await res.json()
+  //     setDistricts(data)
+  //   } catch (err) {
+  //     console.error('Error fetching districts:', err)
+  //   }
+  // }
 
   useEffect(() => {
-    if (usersData) setUsers(usersData)
+    if (usersData) {
+      setUsers(usersData)
+    }
+    if (categoriesData) {
+      setCategories(categoriesData)
+    }
+    if (categoriesData) {
+      setDistricts(districtsData)
+    }
     fetchRoles()
-    fetchDistricts()
-    fetchCategories()
   }, [usersData])
 
   const handleCreateProvider = (providerData: any) => {
     const params = providerData
-    console.log(params)
     // setUsers(updatedUsers)
     // setFilteredUsers(updatedUsers)
     // setIsCreateDialogOpen(false)
@@ -126,11 +114,11 @@ export default function UsersPage() {
   }
 
   // Update user
-  const handleUpdateUser = async (updatedUser: any) => {
-    // setUsers(updatedUsers)
-    filterUsers(searchQuery, statusFilter)
-    updateUser(updatedUser)
-  }
+  // const handleUpdateUser = async (updatedUser: any) => {
+  //   // setUsers(updatedUsers)
+  //   filterUsers(searchQuery, statusFilter)
+  //   updateUser(updatedUser)
+  // }
 
   return (
     <div className="space-y-6">
@@ -153,9 +141,10 @@ export default function UsersPage() {
       <UsersTable
         users={filteredUsers}
         roles={roles}
+        districts={districts}
+        categories={categories}
         onStatusChange={handleStatusChange}
         onDeleteUser={handleDeleteUser}
-        onUpdateUser={handleUpdateUser}
       />
 
       <CreateUserDialog

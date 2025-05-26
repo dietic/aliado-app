@@ -63,7 +63,7 @@ export const LoginForm: React.FC<LoginProps> = (
     // If validation passes
     if (isPhoneOk && loginPassword) {
       // Form is valid, proceed with submission
-      console.log('Login attempted', { phone: loginPhone, password: loginPassword })
+      // console.log('Login attempted', { phone: loginPhone, password: loginPassword })
       // Here you would typically call an API to authenticate the user
 
       // For demo purposes, show success if the demo credentials are used

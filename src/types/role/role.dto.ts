@@ -1,5 +1,5 @@
 export interface RoleDTO {
-  id: string
+  id?: string
   name: string
   slug: string
 }

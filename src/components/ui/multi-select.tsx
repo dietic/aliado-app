@@ -16,14 +16,15 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Badge } from '@/components/ui/badge'
 
 export type OptionType = {
+  id: string
   slug: string
   name: string
 }
 
 interface MultiSelectProps {
   options: OptionType[]
-  selected: string[]
-  onChange: (selected: string[]) => void
+  selected: OptionType[]
+  onChange: (selected: OptionType[]) => void
   placeholder?: string
   className?: string
   emptyMessage?: string
@@ -39,29 +40,24 @@ export function MultiSelect({
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false)
   const commandListRef = React.useRef<HTMLDivElement>(null)
-
-  const handleUnselect = (item: string) => {
-    onChange(selected.filter((i) => i !== item))
+  const handleUnselect = (itemId: string) => {
+    onChange(selected.filter((item) => item.id !== itemId))
   }
 
-  const handleSelect = (value: string) => {
-    if (selected.includes(value)) {
-      onChange(selected.filter((item) => item !== value))
+  const handleSelect = (id: string) => {
+    const alreadySelected = selected.some((item) => item.id === id)
+    if (alreadySelected) {
+      onChange(selected.filter((item) => item.id !== id))
     } else {
-      onChange([...selected, value])
+      const matched = options.find((option) => option.id === id)
+      if (matched) onChange([...selected, matched])
     }
   }
 
-  // Handle wheel events to enable mouse wheel scrolling with smooth behavior
   const handleWheel = (event: React.WheelEvent) => {
-    // Prevent the default behavior to avoid page scrolling
     event.stopPropagation()
-
-    // Get the scrollable element (CommandGroup)
     const scrollContainer = commandListRef.current?.querySelector('.overflow-y-auto')
-
     if (scrollContainer) {
-      // Use smooth scrolling with scrollTo instead of directly modifying scrollTop
       scrollContainer.scrollTo({
         top: scrollContainer.scrollTop + event.deltaY,
         behavior: 'smooth',
@@ -88,30 +84,26 @@ export function MultiSelect({
             {selected.map((item) => (
               <Badge
                 variant="secondary"
-                key={item}
+                key={item.id}
                 className="mr-1 mb-1 pr-1 flex items-center gap-1 bg-slate-800 dark:bg-primary"
-                onClick={(e) => {
-                  e.stopPropagation()
-                }}
+                onClick={(e) => e.stopPropagation()}
               >
-                <span className="truncate">
-                  {options.find((option) => option.slug === item)?.name || item}
-                </span>
+                <span className="truncate">{item.name}</span>
                 <span
                   role="button"
                   tabIndex={0}
                   className="ml-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 p-0.5 cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation()
-                    handleUnselect(item)
+                    handleUnselect(item.id)
                   }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault()
-                      handleUnselect(item)
+                      handleUnselect(item.id)
                     }
                   }}
-                  aria-label={`Remove ${options.find((option) => option.slug === item)?.name || item}`}
+                  aria-label={`Remove ${item.name}`}
                 >
                   <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
                 </span>
@@ -132,11 +124,11 @@ export function MultiSelect({
             <CommandEmpty>{emptyMessage}</CommandEmpty>
             <CommandGroup className="max-h-[200px] overflow-y-auto scrollbar-thin smooth-scroll">
               {options.map((option) => (
-                <CommandItem key={option.slug} onSelect={() => handleSelect(option.slug)}>
+                <CommandItem key={option.id} onSelect={() => handleSelect(option.id)}>
                   <Check
                     className={cn(
                       'mr-2 h-4 w-4',
-                      selected.includes(option.slug) ? 'opacity-100' : 'opacity-0'
+                      selected.some((s) => s.id === option.id) ? 'opacity-100' : 'opacity-0'
                     )}
                   />
                   {option.name}
