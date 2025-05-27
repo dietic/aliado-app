@@ -6,21 +6,14 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 
 const nextConfig: NextConfig = {
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...(config.resolve.alias || {}),
-      '@': path.resolve(__dirname, 'src'),
-    }
-    return config
-  },
+  // webpack: (config) => {
+  //   config.resolve.alias = {
+  //     ...(config.resolve.alias || {}),
+  //     '@': path.resolve(__dirname, 'src'),
+  //   }
+  //   return config
+  // },
   // turbopack: {},
-  reactStrictMode: true,
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '1mb', // optional
-      allowedOrigins: ['*'], // optional
-    },
-  },
 }
 
 export default withBundleAnalyzer(nextConfig)

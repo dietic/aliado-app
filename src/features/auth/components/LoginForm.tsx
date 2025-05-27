@@ -15,7 +15,6 @@ import { SiFacebook } from '@icons-pack/react-simple-icons'
 import GoogleIcon from '@/components/shared/GoogleIcon'
 
 interface LoginFormProps {
-  /** If provided, will pre-fill the phone number field (e.g., after phone check exists) */
   prefillPhone?: string
 }
 
