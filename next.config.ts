@@ -1,9 +1,4 @@
-import type { NextConfig } from 'next'
-import path from 'path'
-
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   // webpack: (config) => {
@@ -14,6 +9,6 @@ const nextConfig: NextConfig = {
   //   return config
   // },
   // turbopack: {},
-}
+};
 
-export default withBundleAnalyzer(nextConfig)
+export default nextConfig;
