@@ -1,28 +1,28 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useMemo, lazy } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { LoginForm } from '@/features/auth/components/LoginForm'
-import { SignupForm } from '@/features/auth/components/SignupForm'
-import { MotionDiv } from '@/components/shared/DynamicMotion'
+import { useState, useEffect, useMemo, lazy } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { LoginForm } from '@/features/auth/components/LoginForm';
+import { SignupForm } from '@/features/auth/components/signup/SignupForm';
+import { MotionDiv } from '@/components/shared/DynamicMotion';
 
 export default function Auth() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const mode = searchParams.get('mode')
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const mode = searchParams.get('mode');
 
-  const [prefillPhone, setPrefillPhone] = useState<string | undefined>(undefined)
-  const [signupFormKey, setSignupFormKey] = useState(0)
+  const [prefillPhone, setPrefillPhone] = useState<string | undefined>(undefined);
+  const [signupFormKey, setSignupFormKey] = useState(0);
 
   const activeTab = useMemo(() => {
-    return mode === 'signup' ? 'signup' : 'login'
-  }, [mode])
+    return mode === 'signup' ? 'signup' : 'login';
+  }, [mode]);
 
   const handlePhoneExists = (phone: string) => {
-    setPrefillPhone(phone)
-    router.replace('/app/auth?mode=login')
-  }
+    setPrefillPhone(phone);
+    router.replace('/app/auth?mode=login');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 flex flex-col">
@@ -49,9 +49,9 @@ export default function Auth() {
                 defaultValue="login"
                 value={activeTab}
                 onValueChange={(val) => {
-                  router.replace(`/app/auth?mode=${val}`)
+                  router.replace(`/app/auth?mode=${val}`);
                   if (val === 'signup') {
-                    setSignupFormKey((prev) => prev + 1)
+                    setSignupFormKey((prev) => prev + 1);
                   }
                 }}
                 className="w-full"
@@ -85,8 +85,8 @@ export default function Auth() {
                     ¿No tienes una cuenta?{' '}
                     <button
                       onClick={() => {
-                        setSignupFormKey((prev) => prev + 1)
-                        router.replace('/app/auth?mode=signup')
+                        setSignupFormKey((prev) => prev + 1);
+                        router.replace('/app/auth?mode=signup');
                       }}
                       className="text-primary font-medium hover:underline dark:text-slate-300 dark:hover:text-slate-100"
                     >
@@ -98,7 +98,7 @@ export default function Auth() {
                     ¿Ya tienes una cuenta?{' '}
                     <button
                       onClick={() => {
-                        router.replace('/app/auth?mode=login')
+                        router.replace('/app/auth?mode=login');
                       }}
                       className="text-primary font-medium hover:underline dark:text-slate-300 dark:hover:text-slate-100"
                     >
@@ -116,5 +116,5 @@ export default function Auth() {
         </div>
       </main>
     </div>
-  )
+  );
 }

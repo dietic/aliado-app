@@ -1,23 +1,23 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { MotionDiv } from '../shared/DynamicMotion'
-import { useEffect, useState } from 'react'
-import { Menu, X } from 'lucide-react'
-import ThemeToggle from '@/components/shared/ThemeToggle'
-import ThemedImage from '@/components/shared/ThemedImage'
+'use client';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { MotionDiv } from '../shared/DynamicMotion';
+import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import ThemeToggle from '@/components/shared/ThemeToggle';
+import ThemedImage from '@/components/shared/ThemedImage';
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <header
@@ -134,5 +134,5 @@ export default function Navbar() {
         </MotionDiv>
       )}
     </header>
-  )
+  );
 }

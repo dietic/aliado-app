@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { useLogin } from '@/features/auth/hooks/useLogin'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Checkbox } from '@/components/ui/checkbox'
-import { ArrowRight, Eye, EyeOff, Lock, Phone } from 'lucide-react'
-import { SiFacebook } from '@icons-pack/react-simple-icons'
-import GoogleIcon from '@/components/shared/GoogleIcon'
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useLogin } from '@/features/auth/hooks/useLogin';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ArrowRight, Eye, EyeOff, Lock, Phone } from 'lucide-react';
+import { SiFacebook } from '@icons-pack/react-simple-icons';
+import GoogleIcon from '@/components/shared/GoogleIcon';
 
 interface LoginFormProps {
-  prefillPhone?: string
+  prefillPhone?: string;
 }
 
 // Define schema for login form validation using Zod
@@ -27,12 +27,12 @@ const loginSchema = z.object({
       message: 'Por favor ingresa un número de teléfono válido con código de país',
     }),
   password: z.string().min(1, { message: 'Ingresa tu contraseña' }),
-})
-type LoginFormData = z.infer<typeof loginSchema>
+});
+type LoginFormData = z.infer<typeof loginSchema>;
 
 export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
-  const [showPassword, setShowPassword] = useState(false)
-  const togglePasswordVisibility = () => setShowPassword((prev) => !prev)
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   // Initialize form with react-hook-form and Zod schema
   const {
@@ -44,26 +44,26 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: { phone: '', password: '' },
-  })
+  });
 
   // Watch form values for conditional UI (disable button, error messages)
-  const phoneValue = watch('phone')
-  const passwordValue = watch('password')
+  const phoneValue = watch('phone');
+  const passwordValue = watch('password');
 
   // If a phone number is provided to pre-fill (e.g., from signup phone check), set it
   useEffect(() => {
     if (prefillPhone) {
-      setValue('phone', prefillPhone)
+      setValue('phone', prefillPhone);
     }
-  }, [prefillPhone, setValue])
+  }, [prefillPhone, setValue]);
 
-  const { login, isLoading } = useLogin()
+  const { login, isPending } = useLogin();
 
   // Handle form submission
   const onSubmit = (data: LoginFormData) => {
-    login(data.phone, data.password)
+    login(data.phone, data.password);
     // Note: login business logic (API call or authentication) is handled in useLogin hook
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -168,5 +168,5 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
         </Button>
       </div>
     </form>
-  )
-}
+  );
+};

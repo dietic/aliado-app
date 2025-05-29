@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import type React from 'react'
+import type React from 'react';
 
-import { useState } from 'react'
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -10,28 +10,28 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
-import { MultiSelect } from '@/components/ui/multi-select'
-import { useCreateUser } from '../hooks/useCreateUser'
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { MultiSelect } from '@/components/ui/multi-select';
+import { useCreateUser } from '../hooks/useCreateUser';
 
 interface CreateUserDialogProps {
-  open: boolean
-  roles: any
-  districts: any
-  categories: any
-  onOpenChange: (open: boolean) => void
-  onCreateUser: (userData: any) => void
+  open: boolean;
+  roles: any;
+  districts: any;
+  categories: any;
+  onOpenChange: (open: boolean) => void;
+  onCreateUser: (userData: any) => void;
 }
 
 export function CreateUserDialog({
@@ -46,26 +46,26 @@ export function CreateUserDialog({
     email: '',
     role: '',
     status: '',
-  })
-  const { mutate: createUser, isPending, error } = useCreateUser()
+  });
+  const { mutate: createUser, isPending, error } = useCreateUser();
 
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData((prev) => ({ ...prev, [field]: value }));
 
     // Clear error when field is edited
     if (errors[field]) {
       setErrors((prev) => {
-        const newErrors = { ...prev }
-        delete newErrors[field]
-        return newErrors
-      })
+        const newErrors = { ...prev };
+        delete newErrors[field];
+        return newErrors;
+      });
     }
-  }
+  };
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: Record<string, string> = {};
 
     // if (!formData.firstName.trim()) {
     //   newErrors.firstName = 'El nombre es requerido'
@@ -76,9 +76,9 @@ export function CreateUserDialog({
     // }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'El email es requerido'
+      newErrors.email = 'El email es requerido';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Email inválido'
+      newErrors.email = 'Email inválido';
     }
 
     // if (!formData.phone.trim()) {
@@ -91,25 +91,25 @@ export function CreateUserDialog({
     //   newErrors.password = 'La contraseña debe tener al menos 8 caracteres'
     // }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const resetForm = () => {
     setFormData({
       email: '',
       role: '',
       status: '',
-    })
-  }
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (validateForm()) {
       // onCreateUser(formData)
-      createUser(formData)
+      createUser(formData);
     }
-  }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -246,7 +246,7 @@ export function CreateUserDialog({
             <Button
               type="submit"
               className="bg-gradient-to-r from-[#000041] to-[#1a1a6c] hover:from-[#000041] hover:to-[#3a3a9c] text-white"
-              onClick={() => handleCreateUser()}
+              onClick={() => handleSubmit}
             >
               Crear Usuario
             </Button>
@@ -254,5 +254,5 @@ export function CreateUserDialog({
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

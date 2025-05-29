@@ -1,13 +1,15 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { signUp } from '../api/signUp'
+import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
+import { signUp } from '../api/signUp';
 
-export const useSignUp = () => {
-  const queryClient = useQueryClient()
+export const useSignUp = (options: UseMutationOptions<any, any, { phone: string }, any> = {}) => {
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: signUp,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth'] })
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
+      options.onSuccess?.(...args);
     },
-  })
-}
+    ...options,
+  });
+};
