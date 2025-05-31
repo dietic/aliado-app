@@ -1,40 +1,30 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { useLogin } from '@/features/auth/hooks/useLogin';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowRight, Eye, EyeOff, Lock, Phone } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, Lock, Phone, Loader2 } from 'lucide-react';
 import { SiFacebook } from '@icons-pack/react-simple-icons';
 import GoogleIcon from '@/components/shared/GoogleIcon';
+import { LoginFormData, loginSchema } from '../schemas/loginSchema';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface LoginFormProps {
   prefillPhone?: string;
 }
 
-// Define schema for login form validation using Zod
-const loginSchema = z.object({
-  phone: z
-    .string()
-    .min(1, { message: 'Ingresa tu número de teléfono' })
-    .regex(/^\+?[0-9\s]{8,15}$/, {
-      message: 'Por favor ingresa un número de teléfono válido con código de país',
-    }),
-  password: z.string().min(1, { message: 'Ingresa tu contraseña' }),
-});
-type LoginFormData = z.infer<typeof loginSchema>;
-
 export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
-  // Initialize form with react-hook-form and Zod schema
   const {
     register,
     handleSubmit,
@@ -46,27 +36,57 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
     defaultValues: { phone: '', password: '' },
   });
 
-  // Watch form values for conditional UI (disable button, error messages)
   const phoneValue = watch('phone');
   const passwordValue = watch('password');
 
-  // If a phone number is provided to pre-fill (e.g., from signup phone check), set it
   useEffect(() => {
     if (prefillPhone) {
       setValue('phone', prefillPhone);
     }
   }, [prefillPhone, setValue]);
 
-  const { login, isPending } = useLogin();
+  const { mutate: loginMutate, isPending } = useLogin({
+    onSuccess: (data) => {
+      // The useLogin hook now handles setting the session with supabaseClient.auth.setSession()
+      // So, we only need to handle the UI logic here (toast, navigation).
+      console.log('Login API response data (from component):', data);
 
-  // Handle form submission
-  const onSubmit = (data: LoginFormData) => {
-    login(data.phone, data.password);
-    // Note: login business logic (API call or authentication) is handled in useLogin hook
-  };
+      if (data.success && data.data && data.data.session && data.data.user) {
+        // Check if the session was actually set by the hook (optional, depends on error handling in hook)
+        // For simplicity, we assume if data.success is true, the hook managed to set the session or log an error.
+        toast.success('Iniciaste sesión');
+        router.push('/app'); // Navigate after session is likely set
+      } else if (data.error) {
+        toast.error(data.error.message || 'Credenciales inválidas');
+      } else {
+        console.error(
+          'Login successful but session data is missing or in unexpected format (from component):',
+          data
+        );
+        toast.error('Respuesta inesperada del servidor.');
+      }
+    },
+    onError: (error) => {
+      // This will catch errors from the mutationFn (login API call) or if the augmented onSuccess in useLogin re-throws an error.
+      console.error('Login mutation error (from component):', error);
+      toast.error(error.message || 'Error interno al intentar iniciar sesión.');
+    },
+  });
+
+  const handleLoginSubmitForm = useCallback(
+    (data: LoginFormData) => {
+      const sanitizedData = {
+        phone: data.phone.trim(),
+        password: data.password.trim(),
+      };
+
+      loginMutate(sanitizedData);
+    },
+    [loginMutate]
+  );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleLoginSubmitForm)} className="space-y-6">
       <div className="space-y-4">
         {/* Phone Number Input */}
         <div className="space-y-2">
@@ -135,9 +155,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
       <Button
         type="submit"
         className="w-full bg-gradient-to-r from-primary to-[#1a1a6c] hover:from-primary hover:to-[#3a3a9c] text-white"
-        disabled={!phoneValue || !passwordValue || !!errors.phone}
+        disabled={isPending || !phoneValue || !passwordValue || !!errors.phone} // Added isPending to disabled
       >
-        Iniciar sesión <ArrowRight className="ml-2 h-4 w-4" />
+        {isPending ? (
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <ArrowRight className="ml-2 h-4 w-4" />
+        )}
+        {isPending ? 'Iniciando sesión...' : 'Iniciar sesión'}
       </Button>
 
       {/* Divider and Social Login Buttons */}
