@@ -3,18 +3,20 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-label';
 import { Phone, Loader, ArrowRight } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { PhoneFormData, phoneSchema } from '../../schemas/signupSchema';
-import React, { useCallback, useState } from 'react';
+import { useForm, type UseFormSetValue } from 'react-hook-form';
+import { PhoneFormData, phoneSchema, SignUpFormData } from '../../schemas/signupSchema';
+import React from 'react';
 import { RegistrationStep } from '@/constants/misc';
 import { useGetUserByPhone } from '@/features/users/hooks/useGetUserByPhone';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
-export const PhoneCheckForm: React.FC<{
-  setRegistrationStep: React.Dispatch<React.SetStateAction<number>>;
-  setPhoneValue: (name: string, value: string) => void;
-}> = React.memo(({ setRegistrationStep, setPhoneValue }) => {
+export interface PhoneCheckFormProps {
+  setRegistrationStep: React.Dispatch<React.SetStateAction<RegistrationStep>>;
+  setPhoneValue: UseFormSetValue<SignUpFormData>;
+}
+
+export const PhoneCheckForm: React.FC<PhoneCheckFormProps> = React.memo(({ setRegistrationStep, setPhoneValue }) => {
   const router = useRouter();
   const {
     register,
@@ -105,3 +107,5 @@ export const PhoneCheckForm: React.FC<{
     </div>
   );
 });
+
+PhoneCheckForm.displayName = 'PhoneCheckForm';

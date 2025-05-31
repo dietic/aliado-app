@@ -21,18 +21,13 @@ import {
   Phone,
 } from 'lucide-react';
 import Loader from '@/components/shared/Loader';
-import GoogleIcon from '@/components/shared/GoogleIcon';
-import { SiFacebook } from '@icons-pack/react-simple-icons';
 import { useSignUp } from '@/features/auth/hooks/useSignUp';
 import { PASSWORD_SPECIAL_CHARS, PASSWORD_MIN_LENGTH, RegistrationStep } from '@/constants/misc';
-import {
-  PhoneFormData,
-  phoneSchema,
-  SignUpFormData,
-  signUpSchema,
-} from '../../schemas/signupSchema';
+import { SignUpFormData, signUpSchema } from '../../schemas/signupSchema';
 import { PhoneCheckForm } from './PhoneCheckForm';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { PasswordStrengthIndicator } from './PasswordStrengthIndicator';
 
 interface PasswordValidation {
   minLength: boolean;
@@ -40,11 +35,6 @@ interface PasswordValidation {
   hasLowercase: boolean;
   hasUppercase: boolean;
   hasSpecialChar: boolean;
-}
-
-interface SignupFormProps {
-  /** Callback when an entered phone already exists (triggers switch to login) */
-  onPhoneExists: (phone: string) => void;
 }
 
 // Custom hooks
@@ -74,106 +64,17 @@ const usePasswordValidation = (password: string): PasswordValidation => {
   }, [password]);
 };
 
-// Components
-const PasswordStrengthIndicator: React.FC<{
-  label: string;
-  isValid: boolean;
-}> = React.memo(({ label, isValid }) => (
-  <div className="flex items-center">
-    {isValid ? (
-      <Check className="h-4 w-4 text-green-500 mr-2 flex-shrink-0" />
-    ) : (
-      <X className="h-4 w-4 text-red-500 mr-2 flex-shrink-0" />
-    )}
-    <p className={`text-xs ${isValid ? 'text-green-600' : 'text-slate-500'}`}>{label}</p>
-  </div>
-));
-
-PasswordStrengthIndicator.displayName = 'PasswordStrengthIndicator';
-
-// const PhoneCheckForm: React.FC<{
-//   onSubmit: (data: PhoneFormData) => Promise<void>;
-//   isLoading: boolean;
-// }> = React.memo(({ onSubmit, isLoading }) => {
-//   const {
-//     register,
-//     handleSubmit,
-//     formState: { errors, isValid },
-//     watch,
-//   } = useForm<PhoneFormData>({
-//     resolver: zodResolver(phoneSchema),
-//     mode: 'onChange',
-//   });
-//
-//   const phoneValue = watch('phone');
-//
-//   return (
-//     <div className="transition-all duration-300 opacity-100 translate-x-0">
-//       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-//         <div className="space-y-2">
-//           <Label htmlFor="check-phone" className="dark:text-slate-200">
-//             Número de teléfono
-//           </Label>
-//           <div className="relative">
-//             <Phone
-//               className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4 ${
-//                 phoneValue && errors.phone ? '-translate-y-[110%]' : ''
-//               }`}
-//             />
-//             <Input
-//               id="check-phone"
-//               type="tel"
-//               placeholder="+51 999 999 999"
-//               className={`pl-10 ${
-//                 phoneValue && errors.phone ? 'border-red-500 focus:ring-red-500' : ''
-//               }`}
-//               {...register('phone')}
-//               autoComplete="tel"
-//               aria-describedby={errors.phone ? 'phone-error' : 'phone-help'}
-//             />
-//             {phoneValue && errors.phone && (
-//               <div id="phone-error" className="text-red-500 text-xs mt-1" role="alert">
-//                 {errors.phone.message}
-//               </div>
-//             )}
-//           </div>
-//           <p id="phone-help" className="text-xs text-slate-500 mt-1">
-//             Ingresa tu número con código de país para verificar si ya tienes una cuenta
-//           </p>
-//         </div>
-//         <Button
-//           type="submit"
-//           className="w-full bg-gradient-to-r from-primary to-[#1a1a6c] hover:from-primary hover:to-[#3a3a9c] text-white disabled:opacity-50 disabled:cursor-not-allowed"
-//           disabled={isLoading || !isValid}
-//         >
-//           {isLoading ? (
-//             <span className="flex items-center">
-//               <Loader className="mr-2" /> Verificando...
-//             </span>
-//           ) : (
-//             <span className="flex items-center">
-//               Continuar <ArrowRight className="ml-2 h-4 w-4" />
-//             </span>
-//           )}
-//         </Button>
-//       </form>
-//     </div>
-//   );
-// });
-//
-// PhoneCheckForm.displayName = 'PhoneCheckForm';
-
-export const SignupForm: React.FC<SignupFormProps> = ({ onPhoneExists }) => {
+export const SignupForm: React.FC = () => {
   const [registrationStep, setRegistrationStep] = useState<RegistrationStep>(
     RegistrationStep.PHONE_CHECK
   );
   const [showPassword, setShowPassword] = useState(false);
-
-  // Hooks
+  const router = useRouter();
   const { mutate: signUpMutate, isPending: signingUp } = useSignUp({
     onSuccess: (data) => {
       if (data?.success) {
         toast.success(data?.message || 'Cuenta creada exitosamente');
+        router.replace('/app/auth?mode=login');
       } else {
         toast.error(data.error.message);
       }
@@ -263,7 +164,6 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onPhoneExists }) => {
   if (registrationStep === RegistrationStep.PHONE_CHECK) {
     return (
       <>
-        {/* TODO: fix component typing */}
         <PhoneCheckForm setRegistrationStep={setRegistrationStep} setPhoneValue={setValue} />
       </>
     );
