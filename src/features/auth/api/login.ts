@@ -1,14 +1,18 @@
-export async function login(params: any): Promise<any> {
+import { LoginParams } from '../../../types/auth/auth.params';
+import { LoginApiResponse } from '../../../types/auth/auth.dto';
+
+export async function login(params: LoginParams): Promise<LoginApiResponse> {
   try {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(params),
       headers: { 'Content-Type': 'application/json' },
     });
-    console.log('login res', res);
-    if (!res.ok) throw new Error('Failed to login');
-    return res.json();
+    const body = await res.json();
+    return body;
   } catch (err) {
-    throw new Error('Server error');
+    // Consider how to handle errors more specifically, perhaps returning an ApiError shape
+    console.error('Login API call failed:', err);
+    throw err; // Re-throwing the error is often better for react-query to handle
   }
 }

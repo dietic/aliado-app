@@ -1,4 +1,7 @@
-export async function signUp(params: any): Promise<any> {
+import { SignUpParams } from '../../../types/auth/auth.params';
+import { LoginApiResponse } from '../../../types/auth/auth.dto';
+
+export async function signUp(params: SignUpParams): Promise<LoginApiResponse> {
   try {
     const res = await fetch('/api/auth/signup', {
       method: 'POST',
@@ -8,6 +11,7 @@ export async function signUp(params: any): Promise<any> {
     const body = await res.json();
     return body;
   } catch (err) {
-    return err;
+    console.error('SignUp API call failed:', err);
+    throw err;
   }
 }
