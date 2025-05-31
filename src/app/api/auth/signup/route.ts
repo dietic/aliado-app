@@ -7,24 +7,6 @@ import { SignUpFormData, signUpSchema } from '@/features/auth/schemas/signupSche
 import { handleApiError, customErrors, handleApiSuccess } from '@/lib/handleApi';
 
 export async function POST(req: NextRequest) {
-  // Rate limiting
-  const ip =
-    req.headers.get('x-forwarded-for') ??
-    req.headers.get('x-real-ip') ??
-    req.headers.get('cf-connecting-ip') ??
-    '127.0.0.1';
-
-  const { success } = await ratelimit.limit(ip);
-
-  if (!success) {
-    return customErrors.rateLimitExceededError();
-  }
-
-  const contentType = req.headers.get('content-type');
-  if (!contentType?.includes('application/json')) {
-    return handleApiError('BAD_REQUEST');
-  }
-
   let body: unknown;
 
   try {
@@ -42,7 +24,6 @@ export async function POST(req: NextRequest) {
   }
   const { firstName, lastName, email, password, phone }: SignUpFormData = validationResult.data;
 
-  // Sanitize input data
   const sanitizedData = {
     firstName: firstName.trim(),
     lastName: lastName.trim(),
@@ -50,27 +31,16 @@ export async function POST(req: NextRequest) {
     phone: phone.trim(),
   };
 
-  // Check if user already exists by email
-  // const { data: existingUser, error: existingUserError } = await supabase.auth.getUser(email);
-
-  // if (existingUser?.user) {
-  //   return handleApiError(existingUserError);
-  // }
-
-  // Check if phone number already exists
   const { data: existingProvider, error: existingProviderError } = await supabase
     .from('providers')
     .select('id')
     .eq('phone', sanitizedData.phone)
     .single();
 
-  console.log('existingProvider', existingProvider);
-  console.log('supabase create user error', existingProviderError);
   if (existingProvider) {
-    return handleApiError('CONFLICT', 'User already exists with this phone number');
+    return handleApiError('CONFLICT', 'Usuario ya existe');
   }
 
-  // Create user in Supabase Auth
   const { data: supabaseCreatedUser, error: supabaseCreatedUserError } = await supabase.auth.signUp(
     {
       email: sanitizedData.email,
@@ -85,7 +55,6 @@ export async function POST(req: NextRequest) {
   );
 
   if (supabaseCreatedUserError) {
-    console.log('supabase create user error', supabaseCreatedUserError);
     return handleApiError(supabaseCreatedUserError);
   }
 
@@ -93,7 +62,6 @@ export async function POST(req: NextRequest) {
     return handleApiError('INTERNAL_ERROR');
   }
 
-  // Create provider record
   const { data: createdProvider, error: createdProviderError } = await supabase
     .from('providers')
     .insert({
