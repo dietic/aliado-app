@@ -1,21 +1,22 @@
-import type { Metadata } from 'next'
-import { Inter, Poppins } from 'next/font/google'
+import type { Metadata } from 'next';
+import { Inter, Poppins } from 'next/font/google';
 
-import { ThemeProvider } from '@/components/theme-provider'
-import { Toaster } from '@/components/ui/sonner'
-import './globals.css'
+import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
+import { AuthProvider } from '@/contexts/AuthContext';
+import './globals.css';
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-primary',
   display: 'swap',
-})
+});
 const poppins = Poppins({
   subsets: ['latin'],
   variable: '--font-title',
   display: 'swap',
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-})
+});
 
 export const metadata: Metadata = {
   title: 'Aliado',
@@ -26,12 +27,12 @@ export const metadata: Metadata = {
       { url: '/favicon-blanco.png', media: '(prefers-color-scheme: light)' },
     ],
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -42,10 +43,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster />
+          <AuthProvider>
+            {children}
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
