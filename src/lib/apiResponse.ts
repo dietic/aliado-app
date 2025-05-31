@@ -13,8 +13,8 @@ export type ApiError = {
   };
 };
 
-export function success<T>(data: T, statusCode: number = 200) {
-  return NextResponse.json({ success: true, data }, { status: statusCode });
+export function success<T>(data: T, message: string = 'Success', statusCode: number = 200) {
+  return NextResponse.json({ success: true, data, message }, { status: statusCode });
 }
 
 export function failure(code: string, message: string, statusCode: number = 500) {
