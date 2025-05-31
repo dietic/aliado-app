@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(_: NextRequest, { params }: { params: Promise<{ phone: string }> }) {
   const { phone } = await params;
   const { data, error } = await supabase.from('providers').select('*').eq('phone', phone).single();
-  // TODO: change strings for preset const
   if (error && error.code !== 'PGRST116') {
     return handleApiError(error);
   }
