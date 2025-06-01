@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, SubmitHandler, UseFormReturn, Resolver } from 'react-hook-form';
 import { useLogin } from '@/features/auth/hooks/useLogin';
+import { LoginApiResponse } from '@/types/auth/auth.dto';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,7 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowRight, Eye, EyeOff, Lock, Phone, Loader2 } from 'lucide-react';
 import { SiFacebook } from '@icons-pack/react-simple-icons';
 import GoogleIcon from '@/components/shared/GoogleIcon';
-import { LoginFormData, loginSchema } from '../schemas/loginSchema';
+import { loginSchema, LoginFormData } from '../schemas/loginSchema';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
@@ -25,16 +26,21 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
+  const form: UseFormReturn<LoginFormData> = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      phone: '',
+      password: '',
+    },
+  });
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    setValue,
-    watch,
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { phone: '', password: '' },
-  });
+    formState: { errors, isSubmitting },
+    watch, // Added watch
+    setValue, // Added setValue
+  } = form;
 
   const phoneValue = watch('phone');
   const passwordValue = watch('password');
@@ -46,38 +52,27 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
   }, [prefillPhone, setValue]);
 
   const { mutate: loginMutate, isPending } = useLogin({
-    onSuccess: (data) => {
-      // The useLogin hook now handles setting the session with supabaseClient.auth.setSession()
-      // So, we only need to handle the UI logic here (toast, navigation).
-      console.log('Login API response data (from component):', data);
-
+    onSuccess: (data: LoginApiResponse) => {
+      // Use LoginApiResponse
       if (data.success && data.data && data.data.session && data.data.user) {
-        // Check if the session was actually set by the hook (optional, depends on error handling in hook)
-        // For simplicity, we assume if data.success is true, the hook managed to set the session or log an error.
         toast.success('Iniciaste sesión');
-        router.push('/app'); // Navigate after session is likely set
+        router.push('/app');
       } else if (data.error) {
         toast.error(data.error.message || 'Credenciales inválidas');
       } else {
-        console.error(
-          'Login successful but session data is missing or in unexpected format (from component):',
-          data
-        );
         toast.error('Respuesta inesperada del servidor.');
       }
     },
-    onError: (error) => {
-      // This will catch errors from the mutationFn (login API call) or if the augmented onSuccess in useLogin re-throws an error.
-      console.error('Login mutation error (from component):', error);
+    onError: (error: Error) => {
       toast.error(error.message || 'Error interno al intentar iniciar sesión.');
     },
   });
 
   const handleLoginSubmitForm = useCallback(
-    (data: LoginFormData) => {
+    (formData: LoginFormData) => {
       const sanitizedData = {
-        phone: data.phone.trim(),
-        password: data.password.trim(),
+        phone: formData.phone.trim(),
+        password: formData.password.trim(),
       };
 
       loginMutate(sanitizedData);

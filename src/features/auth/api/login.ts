@@ -11,8 +11,7 @@ export async function login(params: LoginParams): Promise<LoginApiResponse> {
     const body = await res.json();
     return body;
   } catch (err) {
-    // Consider how to handle errors more specifically, perhaps returning an ApiError shape
     console.error('Login API call failed:', err);
-    throw err; // Re-throwing the error is often better for react-query to handle
+    throw err;
   }
 }

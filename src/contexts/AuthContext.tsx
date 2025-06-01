@@ -55,9 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       // Handle different auth events
       if (event === 'SIGNED_IN') {
-        console.log('User signed in:', session?.user);
       } else if (event === 'SIGNED_OUT') {
-        console.log('User signed out');
         // Clear any cached data
         localStorage.removeItem('supabase.auth.token');
       } else if (event === 'TOKEN_REFRESHED') {
