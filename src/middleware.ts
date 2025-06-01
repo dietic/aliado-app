@@ -8,7 +8,6 @@ const WINDOW = 60 * 1000; // 1 minute
 const ipStore = new Map<string, { count: number; lastRequest: number }>();
 
 export function middleware(req: NextRequest) {
-  console.log('usiung global rate limiter');
   const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
   const now = Date.now();
 
