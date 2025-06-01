@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { Provider, useState } from 'react'
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -8,31 +8,32 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@/components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
-import { Switch } from '@/components/ui/switch'
-import { formatDate } from '@/lib/utils'
-import { EditUserDialog } from './EditUserDialog'
-import { RoleView } from '@/types/role/role.view'
-import { UserView } from '@/types/user/user.view'
-import { updateUserStatus } from '../api/updateUserStatus'
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { formatDate } from '@/lib/utils';
+import { EditUserDialog } from './EditUserDialog';
+import { RoleDTO } from '@/types/role/role.dto';
+import { UserView } from '@/types/user/user.view';
+import { updateUserStatus } from '../api/updateUserStatus';
+import Loader from '@/components/shared/Loader';
 
 interface UsersTableProps {
-  users: UserView[]
-  roles: RoleView[]
-  districts: any[]
-  categories: any[]
-  onStatusChange: (userId: string, status: 'active' | 'inactive') => void
-  onDeleteUser: (userId: string) => void
-  // onUpdateUser: (user: UserView) => void
+  users: UserView[];
+  roles: RoleDTO[];
+  districts: any[];
+  categories: any[];
+  isLoading?: boolean;
+  onStatusChange: (userId: string, status: 'active' | 'inactive') => void;
+  onDeleteUser: (userId: string) => void;
 }
 
 export function UsersTable({
@@ -40,22 +41,22 @@ export function UsersTable({
   roles,
   districts,
   categories,
+  isLoading,
   onStatusChange,
   onDeleteUser,
-  // onUpdateUser,
 }: UsersTableProps) {
-  const [editingUser, setEditingUser] = useState<UserView | null>(null)
-  const [userToDelete, setUserToDelete] = useState<UserView | null>(null)
+  const [editingUser, setEditingUser] = useState<UserView | null>(null);
+  const [userToDelete, setUserToDelete] = useState<UserView | null>(null);
 
   const handleStatusToggle = (userId: string, currentStatus: 'active' | 'inactive') => {
-    const newStatus = currentStatus === 'active' ? 'inactive' : 'active'
-    onStatusChange(userId, newStatus)
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    onStatusChange(userId, newStatus);
     const params = {
       id: userId,
       status: newStatus,
-    }
-    updateUserStatus(params)
-  }
+    };
+    updateUserStatus(params);
+  };
 
   return (
     <div className="rounded-md border bg-white dark:bg-slate-800 dark:border-slate-700">
@@ -73,7 +74,18 @@ export function UsersTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.length === 0 ? (
+          {isLoading ? (
+            <TableRow>
+              <TableCell
+                colSpan={8}
+                className="h-24 text-center dark:text-slate-400 dark:border-slate-700"
+              >
+                <div className="flex justify-center items-center">
+                  <Loader />
+                </div>
+              </TableCell>
+            </TableRow>
+          ) : users.length === 0 ? (
             <TableRow>
               <TableCell
                 colSpan={8}
@@ -166,24 +178,21 @@ export function UsersTable({
           districts={districts}
           categories={categories}
           onOpenChange={(open) => !open && setEditingUser(null)}
-          // onUpdateUser={(updatedUser) => {
-          //   onUpdateUser(updatedUser)
-          //   // setEditingUser(null)
-          // }}
         />
       )}
 
-      {/* {userToDelete && (
-        <DeleteUserDialog
-          user={userToDelete}
-          open={!!userToDelete}
-          onOpenChange={(open) => !open && setUserToDelete(null)}
-          onConfirm={() => {
-            onDeleteUser(userToDelete.id)
-            setUserToDelete(null)
-          }}
-        />
-      )} */}
+      {userToDelete && (
+        // <DeleteUserDialog
+        //   user={userToDelete}
+        //   open={!!userToDelete}
+        //   onOpenChange={(open) => !open && setUserToDelete(null)}
+        //   onConfirm={() => {
+        //     onDeleteUser(userToDelete.id)
+        //     setUserToDelete(null)
+        //   }}
+        // />
+        <div>Delete User Dialog Placeholder</div> // Placeholder for DeleteUserDialog
+      )}
     </div>
-  )
+  );
 }
