@@ -1,4 +1,6 @@
 module.exports = {
+  cache: true,
+  cacheLocation: 'node_modules/.cache/.eslintcache',
   root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
