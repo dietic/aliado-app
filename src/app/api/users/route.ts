@@ -10,7 +10,7 @@ export async function GET() {
   const authUsers = authUsersResponse?.users;
 
   if (usersError) {
-    console.error('Error fetching users:', usersError);
+    console.error('Error fetching users from Supabase Auth:', usersError);
     return NextResponse.json({ error: usersError.message }, { status: 500 });
   }
   if (!authUsers) {
@@ -29,68 +29,96 @@ export async function GET() {
 
   if (providersError) {
     console.error('Error fetching providers:', providersError);
-    return NextResponse.json({ error: providersError.message }, { status: 500 });
+    // It's often better not to fail the whole request if providers are optional supplementary data
+    // Depending on requirements, you might return users without provider info or return an error.
+    // For now, we'll log the error and continue, allowing users to be listed without provider data if this part fails.
+    // return NextResponse.json({ error: providersError.message }, { status: 500 });
   }
 
-  const mergedUsers = authUsers
-    .map((user) => {
-      const provider = providersData?.find((p) => p.user_id === user.id);
+  const mergedUsers = authUsers.map((user) => {
+    const provider = providersData?.find((p) => p.user_id === user.id);
 
-      const userRoleKey = user.user_metadata?.role as string | undefined;
-      const userStatus = user.user_metadata?.status as string | undefined;
+    const userRoleObject = user.user_metadata?.role as
+      | { slug?: string; name?: string }
+      | string
+      | undefined;
+    const userStatus = user.user_metadata?.status as string | undefined;
 
-      let roleData = null;
-      if (userRoleKey && rolesConstant[userRoleKey.toUpperCase() as keyof typeof ROLES]) {
-        roleData = rolesConstant[userRoleKey.toUpperCase() as keyof typeof ROLES];
-      } else if (userRoleKey) {
-        console.warn(`Role key "${userRoleKey}" not found in ROLES constant for user ${user.id}`);
+    let roleData = null;
+    if (typeof userRoleObject === 'object' && userRoleObject?.slug) {
+      const slugToFind = userRoleObject.slug;
+      const roleKey = (Object.keys(rolesConstant) as Array<keyof typeof ROLES>).find(
+        (key) => rolesConstant[key].slug === slugToFind
+      );
+      if (roleKey) {
+        roleData = rolesConstant[roleKey];
+      } else {
+        console.warn(
+          `Role slug "${slugToFind}" from user_metadata.role.slug not found in ROLES constant for user ${user.id}`
+        );
       }
+    } else if (typeof userRoleObject === 'string') {
+      // Fallback if user_metadata.role is a string (e.g., "ADMIN" or "admin")
+      const roleKeyFromString = userRoleObject.toUpperCase() as keyof typeof ROLES;
+      if (rolesConstant[roleKeyFromString]) {
+        roleData = rolesConstant[roleKeyFromString];
+      } else {
+        console.warn(
+          `Role string "${userRoleObject}" from user_metadata.role not found as a key in ROLES constant for user ${user.id}`
+        );
+      }
+    } else if (user.user_metadata?.role) {
+      console.warn(
+        `user_metadata.role for user ${user.id} is in an unexpected format:`,
+        user.user_metadata.role
+      );
+    }
 
-      return {
-        id: user.id,
-        role: roleData,
-        email: user.email,
-        provider: provider
-          ? {
-              id: provider.id,
-              dni: provider.dni,
-              firstName: provider.first_name,
-              lastName: provider.last_name,
-              phone: provider.phone,
-              rating: provider.rating,
-              categories:
-                provider.provider_categories
-                  ?.map((pc: any) =>
-                    pc.category
-                      ? {
-                          id: pc.category.id,
-                          name: pc.category.name,
-                          slug: pc.category.slug,
-                        }
-                      : null
-                  )
-                  .filter(Boolean) ?? [],
-              districts:
-                provider.provider_districts
-                  ?.map((pd: any) =>
-                    pd.district
-                      ? {
-                          id: pd.district.id,
-                          name: pd.district.name,
-                          slug: pd.district.slug,
-                        }
-                      : null
-                  )
-                  .filter(Boolean) ?? [],
-            }
-          : null,
-        status: userStatus || 'unknown',
-        updatedAt: user.updated_at,
-        createdAt: user.created_at,
-        lastLoggedIn: user.last_sign_in_at,
-      };
-    })
-    .filter((item) => item.provider !== null);
+    return {
+      id: user.id,
+      role: roleData, // This will be an object like { slug: 'admin', name: 'Admin' } or null
+      email: user.email,
+      provider: provider
+        ? {
+            id: provider.id,
+            dni: provider.dni,
+            firstName: provider.first_name,
+            lastName: provider.last_name,
+            phone: provider.phone,
+            rating: provider.rating,
+            categories:
+              provider.provider_categories
+                ?.map((pc: any) =>
+                  pc.category
+                    ? {
+                        id: pc.category.id,
+                        name: pc.category.name,
+                        slug: pc.category.slug,
+                      }
+                    : null
+                )
+                .filter(Boolean) ?? [],
+            districts:
+              provider.provider_districts
+                ?.map((pd: any) =>
+                  pd.district
+                    ? {
+                        id: pd.district.id,
+                        name: pd.district.name,
+                        slug: pd.district.slug,
+                      }
+                    : null
+                )
+                .filter(Boolean) ?? [],
+          }
+        : null,
+      status: userStatus || 'unknown',
+      updatedAt: user.updated_at,
+      createdAt: user.created_at,
+      lastLoggedIn: user.last_sign_in_at,
+    };
+  });
+  // .filter((item) => item.provider !== null); // Removed this filter to include all users
 
   const sortedUsers = mergedUsers.sort(
     (a, b) => new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime()
