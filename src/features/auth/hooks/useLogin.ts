@@ -13,50 +13,76 @@ export function useLogin(
   > = {}
 ) {
   const queryClient = useQueryClient();
+
+  // Store the original onSuccess callback
+  const originalOnSuccess = options.onSuccess;
+
   return useMutation<LoginApiResponse, Error, { phone: string; password: string }, any>({
     mutationFn: login,
+    onError: options.onError,
     onSuccess: async (response, variables, context) => {
       if (response.success) {
         const successData = response as LoginSuccessResponse;
 
+        // Validate session data exists
         if (
           !successData.data ||
           !successData.data.session ||
           !successData.data.session.access_token ||
           !successData.data.session.refresh_token
         ) {
-          console.error(
-            '[useLogin] Critical: Session tokens missing in API response.',
-            successData.data
-          );
           throw new Error('Login successful, but session tokens are missing in the response.');
         }
 
-        const { error: setSessionError } = await supabaseClient.auth.setSession({
-          access_token: successData.data.session.access_token,
-          refresh_token: successData.data.session.refresh_token,
-        });
+        try {
+          // Set session with timeout to prevent hanging
+          const setSessionPromise = supabaseClient.auth.setSession({
+            access_token: successData.data.session.access_token,
+            refresh_token: successData.data.session.refresh_token,
+          });
 
-        if (setSessionError) {
-          console.error('[useLogin] Failed to initialize client session:', setSessionError);
-          throw new Error(`Failed to initialize client session: ${setSessionError.message}`);
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('setSession timeout')), 5000)
+          );
+
+          const { error: setSessionError } = (await Promise.race([
+            setSessionPromise,
+            timeoutPromise,
+          ])) as any;
+
+          if (setSessionError) {
+            throw new Error(`Failed to initialize client session: ${setSessionError.message}`);
+          }
+        } catch (error) {
+          // Continue without setSession - AuthContext should handle session automatically
+          console.warn('setSession failed or timed out, continuing...', error);
         }
+
+        // Invalidate auth queries to trigger refetch
         queryClient.invalidateQueries({ queryKey: ['auth'] });
 
-        const {
-          data: { user: userAfterSetSession },
-          error: getUserError,
-        } = await supabaseClient.auth.getUser();
+        try {
+          // Verify user session with timeout
+          const getUserPromise = supabaseClient.auth.getUser();
+          const getUserTimeout = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('getUser timeout')), 3000)
+          );
 
-        if (getUserError || !userAfterSetSession) {
-          console.warn('[useLogin] Warning: getUser after setSession failed or returned no user.', {
-            getUserError,
-            userAfterSetSession,
-          });
+          const {
+            data: { user: userAfterSetSession },
+            error: getUserError,
+          } = (await Promise.race([getUserPromise, getUserTimeout])) as any;
+
+          if (getUserError || !userAfterSetSession) {
+            console.warn('getUser after setSession failed or returned no user.');
+          }
+        } catch (error) {
+          console.warn('getUser failed or timed out, continuing...', error);
         }
 
-        if (options.onSuccess) {
-          options.onSuccess(response, variables, context);
+        // Call the external onSuccess callback if provided
+        if (originalOnSuccess) {
+          originalOnSuccess(response, variables, context);
         }
       } else {
         const errorData = response as ApiError;

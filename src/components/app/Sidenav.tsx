@@ -1,23 +1,24 @@
-'use client'
+'use client';
 
-import type React from 'react'
+import type React from 'react';
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import { Users, LogOut, Menu } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import ThemedImage from '@/components/shared/ThemedImage'
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { Users, LogOut, Menu } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import ThemedImage from '@/components/shared/ThemedImage';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface NavItemProps {
-  href: string
-  icon: React.ReactNode
-  label: string
-  active?: boolean
-  isCollapsed: boolean
-  onClick?: () => void
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+  isCollapsed: boolean;
+  onClick?: () => void;
 }
 
 function NavItem({ href, icon, label, active, isCollapsed, onClick }: NavItemProps) {
@@ -36,16 +37,16 @@ function NavItem({ href, icon, label, active, isCollapsed, onClick }: NavItemPro
         <span className="font-medium whitespace-nowrap dark:text-slate-200">{label}</span>
       )}
     </Link>
-  )
+  );
 }
 
 export function Sidebar() {
-  const pathname = usePathname()
-  const [open, setOpen] = useState(false)
-  const [isCollapsed, setIsCollapsed] = useState(true)
-  const [isHovering, setIsHovering] = useState(false)
-
-  const isActive = (path: string) => pathname === path || pathname?.startsWith(`${path}/`)
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isHovering, setIsHovering] = useState(false);
+  const { signOut } = useAuth();
+  const isActive = (path: string) => pathname === path || pathname?.startsWith(`${path}/`);
 
   const navItems = [
     { href: '/app/admin/users', icon: <Users className="h-5 w-5" />, label: 'Usuarios' },
@@ -54,21 +55,27 @@ export function Sidebar() {
     // { href: '/admin/messages', icon: <MessageSquare className="h-5 w-5" />, label: 'Mensajes' },
     // { href: '/admin/notifications', icon: <Bell className="h-5 w-5" />, label: 'Notificaciones' },
     // { href: '/admin/settings', icon: <Settings className="h-5 w-5" />, label: 'Configuración' },
-  ]
+  ];
 
   const handleMouseEnter = () => {
-    setIsHovering(true)
-    setIsCollapsed(false)
-  }
+    setIsHovering(true);
+    setIsCollapsed(false);
+  };
 
   const handleMouseLeave = () => {
-    setIsHovering(false)
-    setIsCollapsed(true)
-  }
+    setIsHovering(false);
+    setIsCollapsed(true);
+  };
 
   const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed)
-  }
+    setIsCollapsed(!isCollapsed);
+  };
+
+  const handleSignOut = async () => {
+    console.log('Signing out...');
+
+    await signOut();
+  };
 
   const SidebarContent = () => (
     <>
@@ -131,6 +138,7 @@ export function Sidebar() {
           <Button
             variant="outline"
             className="w-full justify-start text-slate-600 hover:text-red-600 hover:border-red-200 dark:hover:text-primary"
+            onClick={handleSignOut}
           >
             <LogOut className="mr-2 h-5 w-5" />
             Cerrar Sesión
@@ -138,7 +146,7 @@ export function Sidebar() {
         )}
       </div>
     </>
-  )
+  );
 
   return (
     <>
@@ -171,5 +179,5 @@ export function Sidebar() {
         </div>
       </aside>
     </>
-  )
+  );
 }

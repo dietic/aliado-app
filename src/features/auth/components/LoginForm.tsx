@@ -38,8 +38,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch, // Added watch
-    setValue, // Added setValue
+    watch,
+    setValue,
   } = form;
 
   const phoneValue = watch('phone');
@@ -53,10 +53,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
 
   const { mutate: loginMutate, isPending } = useLogin({
     onSuccess: (data: LoginApiResponse) => {
-      // Use LoginApiResponse
+      console.log('here', data);
       if (data.success && data.data && data.data.session && data.data.user) {
         toast.success('Iniciaste sesión');
-        router.push('/app');
+        router.replace('/app');
       } else if (data.error) {
         toast.error(data.error.message || 'Credenciales inválidas');
       } else {
@@ -64,6 +64,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
       }
     },
     onError: (error: Error) => {
+      console.log('here', error);
+
       toast.error(error.message || 'Error interno al intentar iniciar sesión.');
     },
   });
@@ -83,7 +85,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
   return (
     <form onSubmit={handleSubmit(handleLoginSubmitForm)} className="space-y-6">
       <div className="space-y-4">
-        {/* Phone Number Input */}
         <div className="space-y-2">
           <Label htmlFor="login-phone">Número de teléfono</Label>
           <div className="relative">
@@ -95,11 +96,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
               type="tel"
               placeholder="+51 999 999 999"
               className={`pl-10 ${errors.phone && phoneValue ? 'border-red-500 focus:ring-red-500' : ''}`}
-              // Bind input to react-hook-form
               {...register('phone')}
               required
             />
-            {/* Validation error message for phone (shown if invalid and not empty) */}
             {phoneValue && errors.phone && (
               <div className="text-red-500 text-xs mt-1">{errors.phone.message}</div>
             )}
@@ -138,7 +137,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
         </div>
       </div>
 
-      {/* Remember Me Checkbox */}
       <div className="flex items-center space-x-2">
         <Checkbox id="remember" />
         <Label htmlFor="remember" className="text-sm text-slate-500">
@@ -146,7 +144,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
         </Label>
       </div>
 
-      {/* Submit Button */}
       <Button
         type="submit"
         className="w-full bg-gradient-to-r from-primary to-[#1a1a6c] hover:from-primary hover:to-[#3a3a9c] text-white"
@@ -160,7 +157,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ prefillPhone }) => {
         {isPending ? 'Iniciando sesión...' : 'Iniciar sesión'}
       </Button>
 
-      {/* Divider and Social Login Buttons */}
       <div className="relative mb-6">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-slate-300"></div>
